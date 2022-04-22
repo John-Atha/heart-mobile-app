@@ -8,6 +8,11 @@ import { store } from './redux/store';
 
 const theme = {
   ...DefaultTheme,
+  roundness: 3,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: "#1769aa",
+  }
 }
 
 const queryClient = new QueryClient();

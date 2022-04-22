@@ -1,36 +1,47 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Field, Form, Formik } from 'formik'
 import React from 'react'
 import { StyleSheet } from 'react-native'
-import { Button, TextInput } from 'react-native-paper'
+import { Button, TextInput, useTheme } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
 import { users } from '../../data/users'
 import { renderHelperText } from '../../formHelpers/helpers/renderHelperText'
 import { LoginValidationSchema } from '../../formHelpers/validations/loginValidationSchema'
-import { fill } from '../../redux/slices/authSlice'
+import { checkLogged, fill } from '../../redux/slices/authSlice'
 import { setSnackMessage } from '../../redux/slices/snackMessageSlice'
 // import { TextInput } from 'react-native';
-export const LoginForm = ({ navigate }) => {
+export const LoginForm = ({ navigate, goToRegister }) => {
+    const theme = useTheme();
+
+    const styles = StyleSheet.create({
+        button: {
+            marginTop: "16px",
+            padding: "4px",
+            maxWidth: "300px",
+            margin: "auto",
+        },
+        link: {
+            textTransform: "none",
+            marginTop: "16px",
+        },
+    })
+
     const initialValues = {
         email: "",
         password: "",
     }
     const dispatch = useDispatch();
     
-    const submit = (values) => {
-        const user = users[3];
-        dispatch(fill({
-            user,
-            token: "my-secret-token",
-            logged: true,
-            isDoctor: user.isDoctor
-        }));
+    const submit = async (values) => {
         dispatch(setSnackMessage({
             text: "Welcome",
             severity: "success",
         }))
+        await AsyncStorage.setItem("@token", "my-secret-key");
+        // localStorage.setItem(token, "my-secret-token");
         console.log(values);
         setTimeout(() => {
-            navigate("Home");
+            dispatch(checkLogged());
         }, 500)
     }
 
@@ -49,6 +60,7 @@ export const LoginForm = ({ navigate }) => {
                         onChangeText={handleChange('email')}
                         onBlur={handleBlur('email')}
                         value={values.email}
+                        name="email"
                         placeholder="example@gmail.com"
                         right={<TextInput.Icon name="email" />}
                         error={errors["email"] && touched["email"]}
@@ -77,17 +89,12 @@ export const LoginForm = ({ navigate }) => {
                     >
                         Login
                     </Button>
+                    <Button mode="text" onPress={goToRegister} style={styles.link}>
+                        First time here?
+                    </Button>
                 </Form>
             )}
         </Formik>
     )
 }
 
-const styles = StyleSheet.create({
-    button: {
-        marginTop: "16px",
-        padding: "4px",
-        maxWidth: "300px",
-        margin: "auto",
-    }
-})

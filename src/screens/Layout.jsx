@@ -2,7 +2,7 @@ import React from 'react'
 import { StyleSheet } from 'react-native';
 import { View } from 'react-native-web'
 
-export const Screen = ({ children }) => {
+export const Layout = ({ children }) => {
     return (
         <View style={styles.container}>
             { children }
@@ -12,7 +12,8 @@ export const Screen = ({ children }) => {
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      justifyContent: 'center',
+      display: "flex",
+      flexDirection: "column",
+      alignContent: "space-between",
     },
 });
