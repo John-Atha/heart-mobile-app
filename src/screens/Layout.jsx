@@ -1,19 +1,26 @@
 import React from 'react'
-import { StyleSheet } from 'react-native';
-import { View } from 'react-native-web'
+import { SafeAreaView, ScrollView, StyleSheet, useWindowDimensions } from 'react-native';
 
 export const Layout = ({ children }) => {
+
+    const height = useWindowDimensions().height;
+
+    const styles = StyleSheet.create({
+        scrollable: {
+            maxHeight: height,
+            paddingBottom: "150px",
+        },
+        container: {
+            display: "flex",
+            flexDirection: "column",
+            alignContent: "space-between",
+        },
+    })
     return (
-        <View style={styles.container}>
-            { children }
-        </View>
+        <SafeAreaView style={styles.container}>
+            <ScrollView style={styles.scrollable}>
+                { children }
+            </ScrollView>
+        </SafeAreaView>
     )
 }
-
-const styles = StyleSheet.create({
-    container: {
-      display: "flex",
-      flexDirection: "column",
-      alignContent: "space-between",
-    },
-});
