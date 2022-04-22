@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { Headline, Surface } from 'react-native-paper';
-import { useSelector } from 'react-redux';
-import { selectAuth } from '../redux/slices/authSlice';
 import { LoginForm } from '../components/LoginRegister/LoginForm';
 import { RegisterForm } from '../components/LoginRegister/RegisterForm';
 

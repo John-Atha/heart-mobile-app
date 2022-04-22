@@ -1,7 +1,7 @@
 const randomUser = () => {
     return {
         username: "User"+Math.round(Math.random()*1000),
-        password: "12345",
+        id: Math.round(Math.random()*1000),
         isDoctor: Math.random()>0.7,
     }
 }
