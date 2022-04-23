@@ -5,7 +5,6 @@ import { Layout } from './Layout'
 import { logout, selectAuth } from '../redux/slices/authSlice';
 import { StyleSheet, Text, View } from 'react-native';
 import { PersonalForm } from '../components/Account/PersonalForm';
-import { Col, Grid, Row } from 'react-native-paper-grid';
 
 const styles = StyleSheet.create({
     container: {

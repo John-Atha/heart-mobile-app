@@ -7,7 +7,15 @@ import { setContact } from '../../redux/slices/chatSlice'
 import { setDoctor } from '../../redux/slices/doctorSlice'
 import { PersonAvatar } from '../Global/PersonAvatar'
 
-export const DoctorCard = ({ id, firstName, lastName, username, expertise, navigate, similarity, description }) => {
+export const DoctorCard = ({
+    id,
+    firstName,
+    lastName,
+    username,
+    expertise,
+    navigate,
+    description
+}) => {
     const dispatch = useDispatch();
 
     const startChat = () => {
@@ -40,7 +48,7 @@ export const DoctorCard = ({ id, firstName, lastName, username, expertise, navig
                             <PersonAvatar firstName={firstName} lastName={lastName} size={40} styles={styles.avatar} />
                         </Col>
                         <Col size={80}>
-                            <Subheading>{lastName} {firstName} ({similarity}) </Subheading>
+                            <Subheading>{lastName} {firstName}</Subheading>
                             <Text>{expertise}</Text>
                         </Col>
                     </Row>

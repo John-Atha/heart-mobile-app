@@ -37,7 +37,7 @@ export const Messages = ({ contact }) => {
             <ScrollView
                 style={{ maxHeight: "inherit", flex: 1}}
                 ref={scrollViewRef}
-                onContentSizeChange={() => scrollViewRef.current.scrollToEnd({animated: true})}>
+                onContentSizeChange={() => scrollViewRef.current.scrollToEnd({animated: true})}
             >
                 {messages.map((message) => {
                     console.log(message)

@@ -48,10 +48,6 @@ export const DoctorsScreen = ({ navigation: { navigate } }) => {
                             id={id}
                             {...props}
                             navigate={navigate}
-                            similarity={totalSimilarity({
-                                firstName: props.firstName,
-                                lastName: props.lastName
-                            })}
                         />
                     )
                 })

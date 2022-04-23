@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import { ChatScreen } from "../screens/ChatScreen";
 import { DoctorsScreen } from "../screens/DoctorsScreen";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { DiseasesScreen } from "../screens/DiseasesScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -29,6 +30,7 @@ export const MyTabs = () => {
                     <Tab.Screen name="Home" component={HomeScreen} />
                     <Tab.Screen name="Chat" component={ChatScreen} options={{unmountOnBlur: true}} />
                     <Tab.Screen name="Doctors" component={DoctorsScreen} options={{unmountOnBlur: true}} />
+                    <Tab.Screen name="Diseases" component={DiseasesScreen} options={{unmountOnBlur: true}} />
                     <Tab.Screen name="Account" component={AccountScreen} />
                 </>
             )
@@ -63,5 +65,6 @@ const icons = {
     Login: "person",
     Account: "person",
     Chat: "send",
+    Diseases: "medical",
     Doctors: "medkit"
 }
