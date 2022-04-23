@@ -2,18 +2,19 @@ import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { Avatar, Button, Subheading, Surface } from 'react-native-paper'
 import { Col, Grid, Row } from 'react-native-paper-grid'
+import { PersonAvatar } from '../Global/PersonAvatar'
 
-export const Doctor = ({ name, expertise }) => {
+export const Doctor = ({ firstName, lastName, username, expertise }) => {
     return (
         <Surface style={styles.surface}>
             <View>
                 <Grid>
                     <Row>
                         <Col size={20}>
-                            <Avatar.Text size={40} label={name?.slice(0, 1)} style={styles.avatar} />
+                            <PersonAvatar firstName={firstName} lastName={lastName} size={40} styles={styles.avatar} />
                         </Col>
                         <Col size={80}>
-                            <Subheading>{name}</Subheading>
+                            <Subheading>{lastName} {firstName}</Subheading>
                             <Text>{expertise}</Text>
                         </Col>
                     </Row>

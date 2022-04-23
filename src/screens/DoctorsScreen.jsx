@@ -1,5 +1,4 @@
 import React from 'react'
-import { Dimensions, SafeAreaView, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native'
 import { Headline } from 'react-native-paper'
 import { Doctor } from '../components/Doctors/Doctor'
 import { getDoctors } from '../data/doctors'
@@ -15,9 +14,9 @@ export const DoctorsScreen = () => {
             <Headline>
                 Find a Doctor
             </Headline>
-                {doctors?.map(({ name, expertise, id }) => {
+                {doctors?.map(({ id, ...props }) => {
                     return (
-                        <Doctor key={id} name={name} expertise={expertise} />
+                        <Doctor key={id} id={id} {...props} />
                     )
                 })}
         </Layout>

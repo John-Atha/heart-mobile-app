@@ -9,6 +9,7 @@ import { AccountScreen } from "../screens/AccountScreen";
 import { useEffect } from "react";
 import { ChatScreen } from "../screens/ChatScreen";
 import { DoctorsScreen } from "../screens/DoctorsScreen";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 const Tab = createBottomTabNavigator();
 
@@ -26,7 +27,7 @@ export const MyTabs = () => {
             return (
                 <>
                     <Tab.Screen name="Home" component={HomeScreen} />
-                    <Tab.Screen name="Chat" component={ChatScreen} />
+                    <Tab.Screen name="Chat" component={ChatScreen} options={{unmountOnBlur: true}} />
                     <Tab.Screen name="Doctors" component={DoctorsScreen} />
                     <Tab.Screen name="Account" component={AccountScreen} />
                 </>
@@ -39,18 +40,20 @@ export const MyTabs = () => {
         )
     }
     return (
-        <NavigationContainer>
-            <Tab.Navigator
-                screenOptions={({ route}) => ({
-                    tabBarIcon: ({ focused, color, size }) => {
-                        let iconName = icons[route.name];
-                        return <Ionicons name={iconName} size={size} color={color} />;
-                    }
-                })}
-            >
-                { getTabs() }
-            </Tab.Navigator>
-        </NavigationContainer>
+        <SafeAreaProvider>
+            <NavigationContainer>
+                <Tab.Navigator
+                    screenOptions={({ route}) => ({
+                        tabBarIcon: ({ focused, color, size }) => {
+                            let iconName = icons[route.name];
+                            return <Ionicons name={iconName} size={size} color={color} />;
+                        }
+                    })}
+                >
+                    { getTabs() }
+                </Tab.Navigator>
+            </NavigationContainer>
+        </SafeAreaProvider>
     )
 }
 

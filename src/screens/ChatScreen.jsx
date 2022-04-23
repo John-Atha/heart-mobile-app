@@ -1,37 +1,31 @@
-import React, { useState } from 'react'
-import { SafeAreaView, ScrollView, View } from 'react-native'
-import { Headline } from 'react-native-paper'
+import React, { useEffect, useState } from 'react'
+import {  View } from 'react-native'
+import { Button, Headline } from 'react-native-paper'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { ScrollView } from 'react-native-web'
+import { useDispatch, useSelector } from 'react-redux'
 import { Contacts } from '../components/Chat/Contacts'
 import { Messages } from '../components/Chat/Messages'
 import { getDoctors } from '../data/doctors'
-import { users } from '../data/users'
+import { clearContact, selectChatContact } from '../redux/slices/chatSlice'
 import { Layout } from './Layout'
 
 export const ChatScreen = () => {
-    const [contactId, setContactId] = useState(users[10].id);
+    const dispatch = useDispatch();
+    const { selectedContact } = useSelector(selectChatContact);
 
-    const contacts = getDoctors();
+    if (selectedContact) {
+        return <Messages contact={selectedContact} />;
+    }
 
     return (
-        <Layout>
-            <View>
-                <Headline>
-                    Contacts
-                </Headline>
+        <SafeAreaView style={{ flex: 1 }}>
+            <Headline>
+                Contacts
+            </Headline>
+            <ScrollView style={{ maxHeight: "inherit" }}>
                 <Contacts />
-            </View>
-            <View>
-                <Headline>
-                    Messages
-                </Headline>
-                {contactId &&
-                    <SafeAreaView>
-                        <ScrollView>
-                            <Messages contactId={users[10].id} />
-                        </ScrollView>
-                    </SafeAreaView>
-                }
-            </View>
-        </Layout>
+            </ScrollView>
+        </SafeAreaView>
     )
 }

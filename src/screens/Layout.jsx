@@ -1,5 +1,6 @@
 import React from 'react'
-import { SafeAreaView, ScrollView, StyleSheet, useWindowDimensions } from 'react-native';
+import { ScrollView, StyleSheet, useWindowDimensions } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export const Layout = ({ children }) => {
 
@@ -7,11 +8,11 @@ export const Layout = ({ children }) => {
 
     const styles = StyleSheet.create({
         scrollable: {
-            maxHeight: height,
-            paddingBottom: "150px",
+            maxHeight: "inherit",
+            // paddingBottom: "150px",
         },
         container: {
-            display: "flex",
+            flex: 1,
             flexDirection: "column",
             alignContent: "space-between",
         },

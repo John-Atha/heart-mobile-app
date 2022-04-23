@@ -14,6 +14,7 @@ export const Line = ({ data, labels, suffix }) => {
                 width={Dimensions.get("window").width} // from react-native
                 height={220}
                 yAxisSuffix={suffix}
+                withDots={false}
                 chartConfig={{
                     backgroundGradientFrom: "##47789e",
                     backgroundGradientTo: "#1769aa",

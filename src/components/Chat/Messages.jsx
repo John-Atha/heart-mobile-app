@@ -1,39 +1,96 @@
-import React, { useEffect, useState } from 'react'
-import { StyleSheet } from 'react-native';
-import { Surface } from 'react-native-paper';
-import { useSelector } from 'react-redux'
+import React, { useState } from 'react'
+import { ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { Button, Headline, Surface, TextInput, useTheme } from 'react-native-paper';
+import { Col, Grid, Row } from 'react-native-paper-grid';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useDispatch, useSelector } from 'react-redux'
 import { getMessages } from '../../data/chat';
 import { selectAuth } from '../../redux/slices/authSlice'
+import { clearContact } from '../../redux/slices/chatSlice';
 
-export const Messages = ({ contactId }) => {
-    const { user: { id } } = useSelector(selectAuth);
+export const Messages = ({ contact }) => {
+    const dispatch = useDispatch();
+    const { firstName, lastName, username, id: contactId} = contact;
+    const { user: { id: userId } } = useSelector(selectAuth);
+    const messages = getMessages(userId, contactId);
+    const [text, setText] = useState([]);
+    const clearContacts = () => dispatch(clearContact());
 
-    const messages = getMessages(id, contactId);
+    const styles = StyleSheet.create({
+        actions: {
+            padding: "4px",
+            marginBottom: 5,
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "flex-end",
+        }
+    })
 
     return (
-        messages.map((message) => {
-            return (
-                <OneMessage {...message} />
-            )
-        })
+        <SafeAreaView style={{ flex: 1 }}>
+            <Headline>
+                {lastName} {firstName}
+            </Headline>
+            <ScrollView style={{ maxHeight: "inherit", flex: 1}}>
+                {messages.map((message) => {
+                    console.log(message)
+                    return (
+                        <OneMessage {...message} userId={userId} />
+                    )
+                })}
+            </ScrollView>
+            <View style={styles.actions}>
+                <TextInput
+                    style={{ flexGrow: 1, marginRight: 4 }}
+                    mode="outlined"
+                    value={text}
+                    placeholder="Type your message here..."
+                    onChange={(e) => setText(e.target.value)}
+                />
+                <Button
+                    mode="contained"
+                    icon={"send"}
+                >
+                    Send
+                </Button>
+            </View>
+        </SafeAreaView>
     )
 }
 
-const OneMessage = ({ from, to, text, my_id }) => {
+const OneMessage = ({ from, to, text, userId }) => {
+    console.log({ userId })
+    const width = useWindowDimensions().width;
+    const theme = useTheme();
+
+    const messageStyles = {
+        paddingVertical: "16px",
+        padding: "8px",
+        margin: "4px",
+        borderRadius: "10px",
+        maxWidth: (2*width/3) - 8,
+    }
+    
+    const styles = StyleSheet.create({
+        outcoming: {
+            backgroundColor: theme.colors.primary,
+            color: "white",
+            textAlign: "right",
+            marginLeft: width/3,
+            ...messageStyles,
+        },
+        incoming: {
+            backgroundColor: "lightgrey",
+            color: "black",
+            ...messageStyles,
+        }
+    })
+
     return (
-        <Surface style={from===my_id ? styles.outcoming : styles.incoming}>
+        <Surface style={from===userId ? styles.outcoming : styles.incoming}>
             {text}
         </Surface>
     )
 }
 
-const styles = StyleSheet.create({
-    outcoming: {
-        backgroundColor: "blue",
-        color: "white",
-    },
-    incoming: {
-        backgroundColor: "lightgrey",
-        color: "black",
-    }
-})
