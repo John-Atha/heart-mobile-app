@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 import { Headline, Surface } from 'react-native-paper';
 import { LoginForm } from '../components/LoginRegister/LoginForm';
 import { RegisterForm } from '../components/LoginRegister/RegisterForm';
+import { Layout } from './Layout';
 
 export const LoginRegisterScreen = ({ navigation: { navigate }, ...props }) => {
 
@@ -16,22 +17,24 @@ export const LoginRegisterScreen = ({ navigation: { navigate }, ...props }) => {
     }
 
     return (
-        <Surface style={styles.surface}>
-            <Headline style={styles.title}>
-                {title}
-            </Headline>
-            { content }
-        </Surface>
+        <Layout>
+            <Surface style={styles.surface}>
+                <Headline style={styles.title}>
+                    {title}
+                </Headline>
+                { content }
+            </Surface>
+        </Layout>
     )
 }
 
 const styles = StyleSheet.create({
     surface: {
-      padding: "4px",
-      margin: "4px",
-      marginTop: "20vh",
+      paddingHorizontal: "4px",
       elevation: 3,
       paddingVertical: "20px",
+      backgroundColor: "inherit",
+      elevation: 0,
     },
     title: {
         marginBottom: "16px",

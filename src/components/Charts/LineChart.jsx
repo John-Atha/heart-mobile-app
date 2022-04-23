@@ -15,6 +15,8 @@ export const Line = ({ data, labels, suffix }) => {
                 height={220}
                 yAxisSuffix={suffix}
                 withDots={false}
+                withInnerLines={false}
+                withOuterLines={false}
                 chartConfig={{
                     backgroundGradientFrom: "##47789e",
                     backgroundGradientTo: "#1769aa",

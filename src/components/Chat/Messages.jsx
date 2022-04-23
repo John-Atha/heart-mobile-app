@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { Button, Headline, Surface, TextInput, useTheme } from 'react-native-paper';
 import { Col, Grid, Row } from 'react-native-paper-grid';
@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getMessages } from '../../data/chat';
 import { selectAuth } from '../../redux/slices/authSlice'
 import { clearContact } from '../../redux/slices/chatSlice';
+import { PersonAvatar } from '../Global/PersonAvatar';
 
 export const Messages = ({ contact }) => {
     const dispatch = useDispatch();
@@ -14,7 +15,7 @@ export const Messages = ({ contact }) => {
     const { user: { id: userId } } = useSelector(selectAuth);
     const messages = getMessages(userId, contactId);
     const [text, setText] = useState([]);
-    const clearContacts = () => dispatch(clearContact());
+    const scrollViewRef = useRef();
 
     const styles = StyleSheet.create({
         actions: {
@@ -30,9 +31,14 @@ export const Messages = ({ contact }) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <Headline>
+                <PersonAvatar firstName={firstName} lastName={lastName} styles={{ margin: 4 }} />
                 {lastName} {firstName}
             </Headline>
-            <ScrollView style={{ maxHeight: "inherit", flex: 1}}>
+            <ScrollView
+                style={{ maxHeight: "inherit", flex: 1}}
+                ref={scrollViewRef}
+                onContentSizeChange={() => scrollViewRef.current.scrollToEnd({animated: true})}>
+            >
                 {messages.map((message) => {
                     console.log(message)
                     return (
@@ -70,6 +76,7 @@ const OneMessage = ({ from, to, text, userId }) => {
         margin: "4px",
         borderRadius: "10px",
         maxWidth: (2*width/3) - 8,
+        wordWrap: "break-word",
     }
     
     const styles = StyleSheet.create({

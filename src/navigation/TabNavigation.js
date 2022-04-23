@@ -28,7 +28,7 @@ export const MyTabs = () => {
                 <>
                     <Tab.Screen name="Home" component={HomeScreen} />
                     <Tab.Screen name="Chat" component={ChatScreen} options={{unmountOnBlur: true}} />
-                    <Tab.Screen name="Doctors" component={DoctorsScreen} />
+                    <Tab.Screen name="Doctors" component={DoctorsScreen} options={{unmountOnBlur: true}} />
                     <Tab.Screen name="Account" component={AccountScreen} />
                 </>
             )

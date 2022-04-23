@@ -37,6 +37,7 @@ export const LoginForm = ({ navigate, goToRegister }) => {
             text: "Welcome",
             severity: "success",
         }))
+        console.log("filling token...")
         await AsyncStorage.setItem("@token", "my-secret-key");
         // localStorage.setItem(token, "my-secret-token");
         console.log(values);

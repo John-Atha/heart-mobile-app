@@ -37,6 +37,8 @@ export const logout = createAsyncThunk(
     "user/logout",
     async () => {
         await AsyncStorage.removeItem("token");
+        const token = await AsyncStorage.getItem("token");
+        console.log({ token });
     }
 )
 
@@ -57,6 +59,7 @@ export const authSlice = createSlice({
         state.token = token;
         state.logged = Boolean(user);
         state.isDoctor = user?.isDoctor;
+        console.log("filling token...")
         AsyncStorage.setItem("token", token);
     },
   },

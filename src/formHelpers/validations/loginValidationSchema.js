@@ -12,4 +12,4 @@ export const LoginValidationSchema = Yup.object().shape({
         .required(required_msg),
     password: Yup.string()
         .required(required_msg)
-    })
+})

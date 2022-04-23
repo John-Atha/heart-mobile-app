@@ -9,6 +9,7 @@ export const Layout = ({ children }) => {
     const styles = StyleSheet.create({
         scrollable: {
             maxHeight: "inherit",
+            paddingHorizontal: 4,
             // paddingBottom: "150px",
         },
         container: {

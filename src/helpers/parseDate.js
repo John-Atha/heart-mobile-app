@@ -1,7 +1,7 @@
 import moment from "moment";
 
 export const parseDate = (dateStr) => {
-    const date = moment(dateStr);
+    const date = moment(dateStr) || moment();
     const now = moment();
     // if today
     if (date.format("DD-MM-YYYY")===now.format("DD-MM-YYYY")) {
