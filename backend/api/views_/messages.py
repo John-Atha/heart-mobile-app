@@ -12,7 +12,7 @@ class MessagesSummary(APIView):
 
     def get(self, request):
         user = request.user
-        msgs = Message.objects.filter(Q(sender=user)|Q(receiver=user))
+        msgs = Message.objects.filter(Q(sender=user)|Q(receiver=user)).order_by('-datetime')
         seen_contacts = set()
         messages = []
         for msg in msgs:
@@ -62,3 +62,10 @@ class Messages(APIView):
             msg.save()
             return OK(msg.data)
         return SerializerErrors(msg)
+
+class MessagesSeen(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def put(self, request):
+        request.user.received_messages.filter(seen=False).update(seen=True)
+        return OK("Marked as seen")

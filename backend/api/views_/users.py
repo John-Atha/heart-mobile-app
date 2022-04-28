@@ -26,6 +26,7 @@ class Users(APIView):
             return BadRequestException("Invalid body structure")
         password, confirmation = body.get("password"), body.get("confirmation")
         if password==confirmation and password is not None:
+            body['username'] = body.get('email')
             user = UserSerializer(data=body)
             if user.is_valid():
                 user.save()
@@ -66,6 +67,7 @@ class OneUser(APIView):
             body = json.loads(request.body)
         except Exception:
             return BadRequestException("Invalid body structure")
+        body['username'] = body.get('email') or user.username
         user = UserSerializer(user, data=body, partial=True)
         if user.is_valid():
             user.save()

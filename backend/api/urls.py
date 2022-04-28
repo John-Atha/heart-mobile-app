@@ -1,5 +1,5 @@
 from django.urls import path
-from api.views_.messages import Messages, MessagesSummary
+from api.views_.messages import Messages, MessagesSeen, MessagesSummary
 from api.views_.users import *
 from .views import *
 from rest_framework_simplejwt.views import (
@@ -14,4 +14,5 @@ urlpatterns = [
     path('users/<int:id>', OneUser.as_view(), name='OneUser'),
     path('messages/summary', MessagesSummary.as_view(), name='MessagesSummary'),
     path('messages', Messages.as_view(), name='Messages'),
+    path('messages/seen', MessagesSeen.as_view(), name='MarkMessagesAsSeen'),
 ]

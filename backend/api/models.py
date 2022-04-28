@@ -21,4 +21,4 @@ class Message(models.Model):
     datetime = models.DateTimeField(default=datetime.now, null=False, blank=False)
 
     class Meta:
-        ordering = ['-datetime']
+        ordering = ['datetime']
