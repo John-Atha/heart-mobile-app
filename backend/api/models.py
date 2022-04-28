@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
@@ -11,3 +12,13 @@ class User(AbstractUser):
 
     def __str__(self):
         return f"id:{self.id},email:{self.username}"
+
+class Message(models.Model):
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, related_name="sent_messages")
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, related_name="received_messages")
+    text = models.TextField(max_length=2000, null=False, blank=False)
+    seen = models.BooleanField(default=False, blank=False, null=False)
+    datetime = models.DateTimeField(default=datetime.now, null=False, blank=False)
+
+    class Meta:
+        ordering = ['-datetime']
