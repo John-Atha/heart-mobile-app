@@ -38,7 +38,10 @@ class Messages(APIView):
                 contact = User.objects.get(id=contact_id)
             except User.DoesNotExist:
                 return NotFoundException("User", contact_id)
-            messages = Message.objects.filter(Q(sender=user)|Q(receiver=user))
+            messages = Message.objects.filter(
+                sender__in=[user, contact],
+                receiver__in=[user, contact],
+            )
             return OK(MessageSerializer(messages, many=True).data)
         return BadRequestException("Specify contact")
     
