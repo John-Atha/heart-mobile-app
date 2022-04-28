@@ -1,12 +1,14 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Field, Form, Formik } from 'formik'
 import React, { useState } from 'react'
 import { StyleSheet } from 'react-native'
 import { Button, Checkbox, RadioButton, TextInput } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
+import { registerCall } from '../../api/auth'
 import { users } from '../../data/users'
 import { renderHelperText } from '../../formHelpers/helpers/renderHelperText'
 import { RegisterValidationSchema } from '../../formHelpers/validations/registerValidationSchema'
-import { fill } from '../../redux/slices/authSlice'
+import { checkLogged, fill } from '../../redux/slices/authSlice'
 import { setSnackMessage } from '../../redux/slices/snackMessageSlice'
 
 export const RegisterForm = ({ navigate, goToLogin }) => {
@@ -22,18 +24,29 @@ export const RegisterForm = ({ navigate, goToLogin }) => {
     }
 
     const submit = (values) => {
-        const user = users[3];
-        dispatch(fill({
-            user,
-            token: "my-secret-token",
-            logged: true,
-            isDoctor: user.isDoctor
-        }));
-        dispatch(setSnackMessage({
-            text: "Welcome",
-            severity: "success",
-        }))
-        console.log(values);
+        registerCall({ ...values, username: values['email'], first_name: values.firstName, last_name: values.lastName })
+        .then(async (response) => {
+            console.log(response.data);
+            const token = response.data["access"];
+            dispatch(setSnackMessage({
+                text: "Welcome",
+                severity: "success",
+            }))
+            console.log("filling token...")
+            await AsyncStorage.setItem("@token", token);
+            // localStorage.setItem(token, "my-secret-token");
+            console.log(values);
+            setTimeout(() => {
+                dispatch(checkLogged());
+            }, 500)
+        })
+        .catch(err => {
+            console.log(err);
+            dispatch(setSnackMessage({
+                text: "Invalid credentials",
+                severity: "error",
+            }))
+        })
     }
 
     return (

@@ -14,31 +14,34 @@ const initialState = {
 export const checkLogged = createAsyncThunk(
     "user/logged",
     async () => {
-        const logged = await checkLoggedCall();
-        if (logged) {
+        return checkLoggedCall()
+        .then(async (response) => {
+            console.log(response);
             const token = await AsyncStorage.getItem("token");
+            const user = response.data;
             return {
                 token,
-                logged,
-                user: users[9],
-                isDoctor: users[9]?.isDoctor,
+                logged: true,
+                user,
+                isDoctor: user?.is_doctor,
             }
-        }
-        return {
-            token: null,
-            isDoctor: false,
-            logged: false,
-            user: null,
-        }
+        })
+        .catch(err => {
+            console.log(err);
+            return {
+                token: null,
+                isDoctor: false,
+                logged: false,
+                user: null,
+            }
+        })
     }
 )
 
 export const logout = createAsyncThunk(
     "user/logout",
     async () => {
-        await AsyncStorage.removeItem("token");
-        const token = await AsyncStorage.getItem("token");
-        console.log({ token });
+        await AsyncStorage.removeItem("@token");
     }
 )
 

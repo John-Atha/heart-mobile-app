@@ -3,13 +3,15 @@ import { Field, Form, Formik } from 'formik'
 import React from 'react'
 import { StyleSheet } from 'react-native'
 import { Button, TextInput, useTheme } from 'react-native-paper'
+import { useMutation } from 'react-query'
 import { useDispatch } from 'react-redux'
+import { loginCall } from '../../api/auth'
 import { users } from '../../data/users'
 import { renderHelperText } from '../../formHelpers/helpers/renderHelperText'
 import { LoginValidationSchema } from '../../formHelpers/validations/loginValidationSchema'
 import { checkLogged, fill } from '../../redux/slices/authSlice'
 import { setSnackMessage } from '../../redux/slices/snackMessageSlice'
-// import { TextInput } from 'react-native';
+
 export const LoginForm = ({ navigate, goToRegister }) => {
     const theme = useTheme();
 
@@ -33,17 +35,29 @@ export const LoginForm = ({ navigate, goToRegister }) => {
     const dispatch = useDispatch();
     
     const submit = async (values) => {
-        dispatch(setSnackMessage({
-            text: "Welcome",
-            severity: "success",
-        }))
-        console.log("filling token...")
-        await AsyncStorage.setItem("@token", "my-secret-key");
-        // localStorage.setItem(token, "my-secret-token");
-        console.log(values);
-        setTimeout(() => {
-            dispatch(checkLogged());
-        }, 500)
+        loginCall({ ...values, username: values['email'] })
+        .then(async (response) => {
+            console.log(response.data);
+            const token = response.data["access"];
+            dispatch(setSnackMessage({
+                text: "Welcome",
+                severity: "success",
+            }))
+            console.log("filling token...")
+            await AsyncStorage.setItem("@token", token);
+            // localStorage.setItem(token, "my-secret-token");
+            console.log(values);
+            setTimeout(() => {
+                dispatch(checkLogged());
+            }, 500)
+        })
+        .catch(err => {
+            console.log(err);
+            dispatch(setSnackMessage({
+                text: "Invalid credentials",
+                severity: "error",
+            }))
+        })
     }
 
     return (
@@ -62,7 +76,7 @@ export const LoginForm = ({ navigate, goToRegister }) => {
                         onBlur={handleBlur('email')}
                         value={values.email}
                         name="email"
-                        placeholder="example@gmail.com"
+                        placeholder="user52"
                         right={<TextInput.Icon name="email" />}
                         error={errors["email"] && touched["email"]}
                         errors={errors}

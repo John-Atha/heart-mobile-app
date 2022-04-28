@@ -1,37 +1,63 @@
-import React, { useEffect, useState } from 'react'
-import { StyleSheet, Text, useWindowDimensions } from 'react-native';
-import { Surface, TouchableRipple, useTheme } from 'react-native-paper';
+import React from 'react';
+import { StyleSheet, Text } from 'react-native';
+import { Button, Headline, Surface, TouchableRipple } from 'react-native-paper';
 import { Col, Grid, Row } from 'react-native-paper-grid';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { ScrollView } from 'react-native-web';
+import { useQuery } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux'
-import { getContacts } from '../../data/contacts';
+import { getMessagesSummaryCall } from '../../api/chat';
+import { queriesKeys } from '../../api/queriesKeys';
 import { parseDate } from '../../helpers/parseDate';
-import { selectAuth } from '../../redux/slices/authSlice'
+import { selectAuth } from '../../redux/slices/authSlice';
 import { setContact } from '../../redux/slices/chatSlice';
 import { PersonAvatar } from '../Global/PersonAvatar';
+import { Spinner } from '../Global/Spinner';
 
-export const Contacts = () => {
-    const { user: { id }} = useSelector(selectAuth);
-    const [contacts, setContacts] = useState([]);
-    const height = useWindowDimensions().height;
+export const Contacts = ({ navigate }) => {
+    const { user: { id: userId } } = useSelector(selectAuth);
 
-    useEffect(() => {
-        setContacts(getContacts());
-    }, [])
+    const { data, isLoading } = useQuery(
+        queriesKeys['contacts'],
+        getMessagesSummaryCall,
+    )
+
+    if (isLoading) {
+        return (
+            <Spinner />
+        )
+    }
+
+    if (!data?.length) {
+        return (
+            <Surface style={{ paddingVertical: 16, paddingHorizontal: 8, marginVertical: 16, marginHorizontal: 8 }}>
+                <Text style={{ textAlign: "center" }}>
+                    Sorry, your chat history is empty
+                </Text>
+                <Button mode='text' onPress={()=>navigate("Doctors")}>
+                    Find doctors
+                </Button>
+            </Surface>
+
+        )
+    }
 
     return (
-        contacts.map(({ id, ...props }) => {
+        data.map((datum) => {
+            const { sender, receiver, ...props } = datum;
+            let contact = sender;
+            const sent = sender?.id===userId;
+            console.log({ senderId: sender?.id, userId })
+            if (sent) contact = receiver;
             return (
-                <Contact key={id} {...props} id={id} />
+                <Contact key={contact.id} {...props} contact={contact} sent={sent} />
             )
         })
     )
 }
 
-const Contact = ({ username, firstName, lastName, id, text, seen, datetime }) => {
-    const theme = useTheme();
+const Contact = ({ contact: { username, first_name: firstName, last_name: lastName, id }, text, seen, datetime, sent }) => {
     const dispatch = useDispatch();
+
+    console.log({ username, firstName, lastName, id, text, seen, datetime });
 
     const styles = StyleSheet.create({
         contact: {
@@ -58,7 +84,7 @@ const Contact = ({ username, firstName, lastName, id, text, seen, datetime }) =>
                             <PersonAvatar firstName={firstName} lastName={lastName} />
                         </Col>
                         <Col size={80}>
-                            <Text style={{ fontWeight: (seen ? "normal" : "bold") }}>
+                            <Text style={{ fontWeight: ((!sent && seen) ? "bold" : "normal") }}>
                                 {lastName} {firstName}
                                 <br />
                                 { text.slice(0, 15)}{text.length>14 && `...`} &bull; {parseDate(datetime)}

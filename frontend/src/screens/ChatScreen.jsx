@@ -10,7 +10,7 @@ import { getDoctors } from '../data/doctors'
 import { clearContact, selectChatContact } from '../redux/slices/chatSlice'
 import { Layout } from './Layout'
 
-export const ChatScreen = () => {
+export const ChatScreen = ({ navigation: { navigate } }) => {
     const dispatch = useDispatch();
     const { selectedContact } = useSelector(selectChatContact);
 
@@ -28,7 +28,7 @@ export const ChatScreen = () => {
                 Contacts
             </Headline>
             <ScrollView style={{ maxHeight: "inherit" }}>
-                <Contacts />
+                <Contacts navigate={navigate} />
             </ScrollView>
         </SafeAreaView>
     )

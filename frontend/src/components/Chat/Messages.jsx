@@ -1,21 +1,53 @@
-import React, { useState, useRef } from 'react'
-import { ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
-import { Button, Headline, Surface, TextInput, useTheme } from 'react-native-paper';
-import { Col, Grid, Row } from 'react-native-paper-grid';
+import React, { useState, useRef, useEffect } from 'react'
+import { ScrollView, StyleSheet, useWindowDimensions, View, Text } from 'react-native';
+import { Button, Headline, Subheading, Surface, TextInput, useTheme, Caption } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useQuery, useQueryClient } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux'
-import { getMessages } from '../../data/chat';
+import { getMessagesCall, markAllMessagesSeen, sendMessageCall } from '../../api/chat';
 import { selectAuth } from '../../redux/slices/authSlice'
-import { clearContact } from '../../redux/slices/chatSlice';
 import { PersonAvatar } from '../Global/PersonAvatar';
+import { Spinner } from '../Global/Spinner';
+import { queriesKeys } from '../../api/queriesKeys';
+import { parseDate } from '../../helpers/parseDate';
 
 export const Messages = ({ contact }) => {
-    const dispatch = useDispatch();
+    const queryClient = useQueryClient();
     const { firstName, lastName, username, id: contactId} = contact;
     const { user: { id: userId } } = useSelector(selectAuth);
-    const messages = getMessages(userId, contactId);
-    const [text, setText] = useState([]);
+    const { data, isLoading } = useQuery(
+        [queriesKeys['contactMessages'], contactId],
+        () => getMessagesCall(contactId), {
+            enabled: Boolean(contactId),
+        }
+    );
+    const [text, setText] = useState("");
     const scrollViewRef = useRef();
+
+    useEffect(() => {
+        markAllMessagesSeen()
+        .then(response => {
+            console.log(response.data);
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    }, [])
+
+    const sendMessage = () => {
+        console.log({ text });
+        if (text?.length) {
+            sendMessageCall({ text, receiver: contactId })
+            .then(response => {
+                console.log(response.data);
+                queryClient.invalidateQueries(queriesKeys['contactMessages']);
+                setText("");
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        }
+    }
 
     const styles = StyleSheet.create({
         actions: {
@@ -28,24 +60,41 @@ export const Messages = ({ contact }) => {
         }
     })
 
+    const renderMessages = () => {
+        if (isLoading) {
+            return (
+                <Spinner />
+            )
+        }
+        if (!data?.length) {
+            return (
+                <Subheading>
+                    No messages found with this doctor.
+                </Subheading>
+            )
+        }
+        return (
+            <ScrollView
+                style={{ maxHeight: "inherit", flex: 1}}
+                ref={scrollViewRef}
+                onContentSizeChange={() => scrollViewRef.current.scrollToEnd({animated: true})}
+            >
+                {data.map((message) => {
+                    return (
+                        <OneMessage {...message} userId={userId} />
+                    )
+                })}
+            </ScrollView>
+        )
+    }
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <Headline>
                 <PersonAvatar firstName={firstName} lastName={lastName} styles={{ margin: 4 }} />
                 {lastName} {firstName}
             </Headline>
-            <ScrollView
-                style={{ maxHeight: "inherit", flex: 1}}
-                ref={scrollViewRef}
-                onContentSizeChange={() => scrollViewRef.current.scrollToEnd({animated: true})}
-            >
-                {messages.map((message) => {
-                    console.log(message)
-                    return (
-                        <OneMessage {...message} userId={userId} />
-                    )
-                })}
-            </ScrollView>
+            { renderMessages() }
             <View style={styles.actions}>
                 <TextInput
                     style={{ flexGrow: 1, marginRight: 4 }}
@@ -57,6 +106,7 @@ export const Messages = ({ contact }) => {
                 <Button
                     mode="contained"
                     icon={"send"}
+                    onPress={sendMessage}
                 >
                     Send
                 </Button>
@@ -65,13 +115,11 @@ export const Messages = ({ contact }) => {
     )
 }
 
-const OneMessage = ({ from, to, text, userId }) => {
-    console.log({ userId })
+const OneMessage = ({ sender: { id: from }, receiver: { id: to }, text, userId, datetime, seen }) => {
     const width = useWindowDimensions().width;
     const theme = useTheme();
 
     const messageStyles = {
-        paddingVertical: "16px",
         padding: "8px",
         margin: "4px",
         borderRadius: "10px",
@@ -96,7 +144,10 @@ const OneMessage = ({ from, to, text, userId }) => {
 
     return (
         <Surface style={from===userId ? styles.outcoming : styles.incoming}>
-            {text}
+            <Text>{text}</Text>
+            <Caption style={{ textAlign: "inherit" }}>
+                {parseDate(datetime)}{(from===userId && seen) ? ` ● Seen` : ""}
+            </Caption>
         </Surface>
     )
 }
