@@ -11,13 +11,16 @@ import { ChatScreen } from "../screens/ChatScreen";
 import { DoctorsScreen } from "../screens/DoctorsScreen";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { DiseasesScreen } from "../screens/DiseasesScreen";
+import { selectPatient } from "../redux/slices/patientSlice";
+import { PatientProfileScreen } from "../screens/PatientProfileScreen";
 
 const Tab = createBottomTabNavigator();
 
 export const MyTabs = () => {
     const dispatch = useDispatch();
 
-    const { logged } = useSelector(selectAuth);
+    const { logged, isDoctor } = useSelector(selectAuth);
+    const { selectedPatient } = useSelector(selectPatient);
 
     useEffect(() => {
         dispatch(checkLogged());
@@ -25,12 +28,23 @@ export const MyTabs = () => {
     
     const getTabs = () => {
         if (logged) {
+            if (!isDoctor) {
+                return (
+                    <>
+                        <Tab.Screen name="Home" component={HomeScreen} />
+                        <Tab.Screen name="Chat" component={ChatScreen} options={{unmountOnBlur: true}} />
+                        <Tab.Screen name="Doctors" component={DoctorsScreen} options={{unmountOnBlur: true}} />
+                        <Tab.Screen name="Diseases" component={DiseasesScreen} options={{unmountOnBlur: true}} />
+                        <Tab.Screen name="Account" component={AccountScreen} options={{unmountOnBlur: true}} />
+                    </>
+                )
+            }
             return (
                 <>
-                    <Tab.Screen name="Home" component={HomeScreen} />
                     <Tab.Screen name="Chat" component={ChatScreen} options={{unmountOnBlur: true}} />
-                    <Tab.Screen name="Doctors" component={DoctorsScreen} options={{unmountOnBlur: true}} />
-                    <Tab.Screen name="Diseases" component={DiseasesScreen} options={{unmountOnBlur: true}} />
+                    { selectedPatient &&
+                        <Tab.Screen name="Patient" component={PatientProfileScreen} options={{unmountOnBlur: true}} />
+                    }
                     <Tab.Screen name="Account" component={AccountScreen} />
                 </>
             )
@@ -66,5 +80,6 @@ const icons = {
     Account: "person",
     Chat: "send",
     Diseases: "medical",
+    Patient: "medical",
     Doctors: "medkit"
 }

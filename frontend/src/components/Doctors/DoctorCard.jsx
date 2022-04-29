@@ -9,13 +9,14 @@ import { PersonAvatar } from '../Global/PersonAvatar'
 
 export const DoctorCard = ({
     id,
-    firstName,
-    lastName,
+    first_name: firstName,
+    last_name: lastName,
     username,
-    expertise,
+    doctor_info,
     navigate,
-    description
 }) => {
+
+    const { expertise, description } = doctor_info || {};
     const dispatch = useDispatch();
 
     const startChat = () => {
@@ -24,6 +25,7 @@ export const DoctorCard = ({
             lastName,
             username,
             id,
+            doctor_info,
         }));
         navigate("Chat");
     }
@@ -34,8 +36,7 @@ export const DoctorCard = ({
             lastName,
             id,
             username,
-            expertise,
-            description,
+            doctor_info,
         }))
     }
 
@@ -49,7 +50,9 @@ export const DoctorCard = ({
                         </Col>
                         <Col size={80}>
                             <Subheading>{lastName} {firstName}</Subheading>
-                            <Text>{expertise}</Text>
+                            {expertise &&
+                                <Text>{expertise}</Text>
+                            }
                         </Col>
                     </Row>
                 </Grid>

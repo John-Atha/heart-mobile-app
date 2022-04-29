@@ -13,7 +13,7 @@ import { PersonAvatar } from '../Global/PersonAvatar';
 import { Spinner } from '../Global/Spinner';
 
 export const Contacts = ({ navigate }) => {
-    const { user: { id: userId } } = useSelector(selectAuth);
+    const { user: { id: userId }, isDoctor } = useSelector(selectAuth);
 
     const { data, isLoading } = useQuery(
         queriesKeys['contacts'],
@@ -32,9 +32,11 @@ export const Contacts = ({ navigate }) => {
                 <Text style={{ textAlign: "center" }}>
                     Sorry, your chat history is empty
                 </Text>
-                <Button mode='text' onPress={()=>navigate("Doctors")}>
-                    Find doctors
-                </Button>
+                {!isDoctor &&
+                    <Button mode='text' onPress={()=>navigate("Doctors")}>
+                        Find doctors
+                    </Button>
+                }
             </Surface>
 
         )
@@ -54,8 +56,10 @@ export const Contacts = ({ navigate }) => {
     )
 }
 
-const Contact = ({ contact: { username, first_name: firstName, last_name: lastName, id }, text, seen, datetime, sent }) => {
+const Contact = ({ contact, text, seen, datetime, sent }) => {
     const dispatch = useDispatch();
+
+    const { username, first_name: firstName, last_name: lastName, id, doctor_info, patient_info } = contact || {};
 
     console.log({ username, firstName, lastName, id, text, seen, datetime });
 
@@ -69,7 +73,7 @@ const Contact = ({ contact: { username, first_name: firstName, last_name: lastNa
 
     const selectDoc = () => {
         console.log("pressing", id);
-        dispatch(setContact({ username, firstName, lastName, id }));
+        dispatch(setContact({ firstName, lastName, ...contact }));
     }
 
     return (
@@ -84,7 +88,7 @@ const Contact = ({ contact: { username, first_name: firstName, last_name: lastNa
                             <PersonAvatar firstName={firstName} lastName={lastName} />
                         </Col>
                         <Col size={80}>
-                            <Text style={{ fontWeight: ((!sent && seen) ? "bold" : "normal") }}>
+                            <Text style={{ fontWeight: ((!sent && !seen) ? "bold" : "normal") }}>
                                 {lastName} {firstName}
                                 <br />
                                 { text.slice(0, 15)}{text.length>14 && `...`} &bull; {parseDate(datetime)}

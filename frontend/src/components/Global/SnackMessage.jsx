@@ -25,21 +25,27 @@ export const SnackMessage = () => {
     return null;
 }
 
+
+const basicStyles = {
+    color: "black",
+    textAlign: "center",
+}
+
 const styles = StyleSheet.create({
     info: {
         backgroundColor: "#76eaf5",
-        color: "black"
+        ...basicStyles,
     },
     error: {
         backgroundColor: "#ff8a97",
-        color: "black",
+        ...basicStyles,
     },
     warning: {
         backgroundColor: "#c9c95f",
-        color: "black",
+        ...basicStyles,
     },
     success: {
         backgroundColor: "#83d68c",
-        color: "black",
+        ...basicStyles,
     }
 })

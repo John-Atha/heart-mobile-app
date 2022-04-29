@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Layout } from './Layout'
 import { logout, selectAuth } from '../redux/slices/authSlice';
 import { StyleSheet, Text, View } from 'react-native';
-import { PersonalForm } from '../components/Account/PersonalForm';
+import { PatientForm } from '../components/Account/PatientForm';
+import { DoctorForm } from '../components/Account/DoctorForm';
 
 const styles = StyleSheet.create({
     container: {
@@ -20,9 +21,14 @@ const styles = StyleSheet.create({
 
 export const AccountScreen = () => {
     const dispatch = useDispatch();
-    const { user: { username } } = useSelector(selectAuth);
+    const { user: { username }, isDoctor } = useSelector(selectAuth);
 
-
+    const renderForm = () => {
+        if (isDoctor) {
+            return <DoctorForm />
+        }
+        return <PatientForm />
+    }
 
     return (
         <Layout>
@@ -35,8 +41,7 @@ export const AccountScreen = () => {
                 </Button>
             </View>
             <Divider style={{ margin: 8}} />
-            <PersonalForm />
-
+            { renderForm() }
         </Layout>
     )
 }

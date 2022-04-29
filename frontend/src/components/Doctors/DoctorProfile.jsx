@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
         flexWrap: "wrap",
         flexDirection: "row",
         marginTop: 4,
+        alignItems: "center"
     },
     scrollable: {
         maxHeight: "inherit",
@@ -23,48 +24,54 @@ const styles = StyleSheet.create({
 
 export const DoctorProfile = ({ navigate }) => {
     const dispatch = useDispatch();
-    const { selectedDoctor: { id, firstName, lastName, username, expertise, description } } = useSelector(selectDoctor);
+    const { selectedDoctor: { id, firstName, lastName, username, doctor_info } } = useSelector(selectDoctor);
     
+    const { description, expertise } = doctor_info || {};
+
+    console.log({ doctor_info });
+
     const startChat = () => {
         dispatch(setContact({
             firstName,
             lastName,
             username,
             id,
-            expertise,
+            doctor_info,
         }));
         navigate("Chat");
     }
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <View style={styles.container}>
-                <PersonAvatar
-                    firstName={firstName}
-                    lastName={lastName}
-                    styles={{ margin: 4 }}
-                />
-                <View>
-                    <Headline>                    
-                        {lastName} {firstName}
-                    </Headline>
-                    <Text>
-                        { expertise }
-                    </Text>
-                </View>
-            </View>
-            {description &&
-                <>
-                    <Subheading style={{ marginTop: 16 }}>
-                        Description
-                    </Subheading>
-                    <Divider />
-                    <ScrollView style={styles.scrollable}>
+            <View style={{ flex: 1 }}>
+                <View style={styles.container}>
+                    <PersonAvatar
+                        firstName={firstName}
+                        lastName={lastName}
+                        styles={{ margin: 4 }}
+                    />
+                    <View>
+                        <Headline>                    
+                            {lastName} {firstName}
+                        </Headline>
                         <Text>
-                            { description }
+                            { expertise }
                         </Text>
-                    </ScrollView>
-                </>
-            }
+                    </View>
+                </View>
+                {description &&
+                    <View style={{ flex: 1, paddingHorizontal: 8 }}>
+                        <Subheading style={{ marginTop: 16 }}>
+                            Description
+                        </Subheading>
+                        <Divider />
+                        <ScrollView style={styles.scrollable}>
+                            <Text>
+                                { description }
+                            </Text>
+                        </ScrollView>
+                    </View>
+                }
+            </View>
             <Button
                 style={{ margin: 8 }}
                 mode="contained"

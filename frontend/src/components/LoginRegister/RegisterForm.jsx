@@ -24,7 +24,15 @@ export const RegisterForm = ({ navigate, goToLogin }) => {
     }
 
     const submit = (values) => {
-        registerCall({ ...values, username: values['email'], first_name: values.firstName, last_name: values.lastName })
+        registerCall({
+            password: values['password'],
+            confirmation: values['confirmation'],
+            email: values['email'],
+            username: values['email'], 
+            first_name: values.firstName,
+            last_name: values.lastName,
+            is_doctor: isDoctor,
+        })
         .then(async (response) => {
             console.log(response.data);
             const token = response.data["access"];
@@ -67,6 +75,7 @@ export const RegisterForm = ({ navigate, goToLogin }) => {
                         name="email"
                         placeholder="example@gmail.com"
                         right={<TextInput.Icon name="email" />}
+                        error={errors["email"] && touched["email"]}
                         errors={errors}
                         touched={touched}
                     />
@@ -80,6 +89,7 @@ export const RegisterForm = ({ navigate, goToLogin }) => {
                         value={values.firstName}
                         name="firstName"
                         placeholder="George"
+                        error={errors["firstName"] && touched["firstName"]}
                         errors={errors}
                         touched={touched}
                     />
@@ -93,6 +103,7 @@ export const RegisterForm = ({ navigate, goToLogin }) => {
                         value={values.lastName}
                         name="lastName"
                         placeholder="Right"
+                        error={errors["lastName"] && touched["lastName"]}
                         errors={errors}
                         touched={touched}
                     />
@@ -107,6 +118,7 @@ export const RegisterForm = ({ navigate, goToLogin }) => {
                         value={values.password}
                         secureTextEntry
                         right={<TextInput.Icon name="eye" />}
+                        error={errors["password"] && touched["password"]}
                         errors={errors}
                         touched={touched}
                     />
@@ -121,6 +133,7 @@ export const RegisterForm = ({ navigate, goToLogin }) => {
                         value={values.confirmation}
                         secureTextEntry
                         right={<TextInput.Icon name="eye" />}
+                        error={errors["confirmation"] && touched["confirmation"]}
                         errors={errors}
                         touched={touched}
                     />

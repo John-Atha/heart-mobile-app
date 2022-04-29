@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit"
 const initialState = {
     text: "",
     severity: "info",
-    duration: 6000,
+    duration: 3000,
     vertical: "bottom",
 }
 
@@ -15,7 +15,7 @@ export const snackMessageSlice = createSlice({
             const { text, severity, duration, vertical } = action.payload;
             state.text = text;
             state.severity = severity || "info";
-            state.duration = duration || 6000;
+            state.duration = duration || 3000;
             state.vertical = vertical || "bottom";
         },
         hideSnackMessage: (state) => {

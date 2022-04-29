@@ -19,7 +19,7 @@ export const ChatScreen = ({ navigation: { navigate } }) => {
     }, [])
 
     if (selectedContact) {
-        return <Messages contact={selectedContact} />;
+        return <Messages contact={selectedContact} navigate={navigate} />;
     }
 
     return (

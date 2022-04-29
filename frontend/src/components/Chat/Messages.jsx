@@ -10,10 +10,13 @@ import { PersonAvatar } from '../Global/PersonAvatar';
 import { Spinner } from '../Global/Spinner';
 import { queriesKeys } from '../../api/queriesKeys';
 import { parseDate } from '../../helpers/parseDate';
+import { setDoctor } from '../../redux/slices/doctorSlice';
+import { setPatient } from '../../redux/slices/patientSlice';
 
-export const Messages = ({ contact }) => {
+export const Messages = ({ contact, navigate }) => {
+    const dispatch = useDispatch();
     const queryClient = useQueryClient();
-    const { firstName, lastName, username, id: contactId} = contact;
+    const { firstName, lastName, username, id: contactId } = contact;
     const { user: { id: userId } } = useSelector(selectAuth);
     const { data, isLoading } = useQuery(
         [queriesKeys['contactMessages'], contactId],
@@ -49,6 +52,19 @@ export const Messages = ({ contact }) => {
         }
     }
 
+    const goToProfile = () => {
+        if (contact.is_doctor) {
+            dispatch(setDoctor(contact));
+            navigate("Doctors");    
+        }
+        else {
+            dispatch(setPatient(contact));
+            setTimeout(() => {
+                navigate("Patient");
+            }, 500);
+        }
+    }
+
     const styles = StyleSheet.create({
         actions: {
             padding: "4px",
@@ -57,7 +73,15 @@ export const Messages = ({ contact }) => {
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "flex-end",
-        }
+        },
+        header: {
+            display: "flex",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            flexDirection: "row",
+            paddingHorizontal: 4,
+            alignItems: "center",
+        },
     })
 
     const renderMessages = () => {
@@ -68,7 +92,7 @@ export const Messages = ({ contact }) => {
         }
         if (!data?.length) {
             return (
-                <Subheading>
+                <Subheading style={{ maxHeight: "inherit", flex: 1, textAlign: "center", paddingTop: 20 }}>
                     No messages found with this doctor.
                 </Subheading>
             )
@@ -90,10 +114,15 @@ export const Messages = ({ contact }) => {
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <Headline>
-                <PersonAvatar firstName={firstName} lastName={lastName} styles={{ margin: 4 }} />
-                {lastName} {firstName}
-            </Headline>
+            <View style={styles.header}>
+                <Headline>
+                    <PersonAvatar firstName={firstName} lastName={lastName} styles={{ margin: 4 }} />
+                    {lastName} {firstName}
+                </Headline>
+                <Button mode="contained" onPress={goToProfile} style={{ height: 35 }}>
+                    Profile
+                </Button>
+            </View>
             { renderMessages() }
             <View style={styles.actions}>
                 <TextInput

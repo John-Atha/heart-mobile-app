@@ -76,7 +76,7 @@ export const LoginForm = ({ navigate, goToRegister }) => {
                         onBlur={handleBlur('email')}
                         value={values.email}
                         name="email"
-                        placeholder="user52"
+                        placeholder="example@gmail.com"
                         right={<TextInput.Icon name="email" />}
                         error={errors["email"] && touched["email"]}
                         errors={errors}
