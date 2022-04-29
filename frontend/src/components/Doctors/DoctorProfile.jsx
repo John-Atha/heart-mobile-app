@@ -1,6 +1,6 @@
 import React from 'react'
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { Button, Divider, Headline, Subheading } from 'react-native-paper';
+import { Button, Divider, Headline, Subheading, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux'
 import { setContact } from '../../redux/slices/chatSlice';
@@ -19,10 +19,12 @@ const styles = StyleSheet.create({
         maxHeight: "inherit",
         paddingHorizontal: 4,
         whiteSpace: "pre-wrap",
+        backgroundColor: "inherit",
     },
 })
 
 export const DoctorProfile = ({ navigate }) => {
+    const theme = useTheme();
     const dispatch = useDispatch();
     const { selectedDoctor: { id, firstName, lastName, username, doctor_info } } = useSelector(selectDoctor);
     
@@ -41,7 +43,7 @@ export const DoctorProfile = ({ navigate }) => {
         navigate("Chat");
     }
     return (
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background2 }}>
             <View style={{ flex: 1 }}>
                 <View style={styles.container}>
                     <PersonAvatar
@@ -59,7 +61,7 @@ export const DoctorProfile = ({ navigate }) => {
                     </View>
                 </View>
                 {description &&
-                    <View style={{ flex: 1, paddingHorizontal: 8 }}>
+                    <View style={{ flex: 1, paddingHorizontal: 8, borderRadius: theme.roundness, backgroundColor: theme.colors.background }}>
                         <Subheading style={{ marginTop: 16 }}>
                             Description
                         </Subheading>

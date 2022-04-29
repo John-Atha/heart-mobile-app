@@ -1,10 +1,11 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import { Button, Card, Chip, DataTable } from 'react-native-paper'
+import { Button, Card, Chip, DataTable, useTheme } from 'react-native-paper'
 
 export const DiseaseCard = ({ name, metrics, id, severity, pinned }) => {
+    const theme = useTheme();
     return (
-        <Card>
+        <Card style={{ elevation: theme.elevation }}>
             <Card.Title title={name} subtitle={"Severity:"+ severity} />
             <Card.Content>
                 <DataTable>

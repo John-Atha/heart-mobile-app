@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Field, Form, Formik } from 'formik'
 import React from 'react'
-import { StyleSheet } from 'react-native'
+import { Image, StyleSheet } from 'react-native'
 import { Button, TextInput, useTheme } from 'react-native-paper'
 import { useMutation } from 'react-query'
 import { useDispatch } from 'react-redux'

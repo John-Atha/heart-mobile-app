@@ -1,10 +1,11 @@
 import React from 'react'
 import { ScrollView, StyleSheet, useWindowDimensions } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export const Layout = ({ children }) => {
 
-    const height = useWindowDimensions().height;
+    const theme = useTheme();
 
     const styles = StyleSheet.create({
         scrollable: {
@@ -16,6 +17,7 @@ export const Layout = ({ children }) => {
             flex: 1,
             flexDirection: "column",
             alignContent: "space-between",
+            backgroundColor: theme.colors.background2,
         },
     })
     return (

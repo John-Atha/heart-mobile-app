@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native';
-import { Button } from 'react-native-paper';
+import { Button, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Explore } from '../components/Diseases/Explore';
 import { Pinned } from '../components/Diseases/Pinned';
@@ -20,6 +20,7 @@ const styles = StyleSheet.create({
 })
 
 export const DiseasesScreen = ({ navigation: { navigate } }) => {
+    const theme = useTheme();
     const [page, setPage] = useState("pinned");
     const [diseases, setDiseases] = useState([]);
     const [pinned, setPinned] = useState([]);
@@ -36,7 +37,7 @@ export const DiseasesScreen = ({ navigation: { navigate } }) => {
     }
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background2 }}>
             <View style={styles.container}>
                 <Button
                     onPress={()=>setPage("pinned")}

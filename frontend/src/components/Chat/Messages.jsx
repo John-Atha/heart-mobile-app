@@ -159,21 +159,21 @@ const OneMessage = ({ sender: { id: from }, receiver: { id: to }, text, userId, 
     const styles = StyleSheet.create({
         outcoming: {
             backgroundColor: theme.colors.primary,
-            color: "white",
             textAlign: "right",
             marginLeft: width/3,
             ...messageStyles,
+            color: "white",
         },
         incoming: {
             backgroundColor: "lightgrey",
-            color: "black",
             ...messageStyles,
+            color: "black",
         }
     })
 
     return (
         <Surface style={from===userId ? styles.outcoming : styles.incoming}>
-            <Text>{text}</Text>
+            <Text style={{ color: "inherit" }}>{text}</Text>
             <Caption style={{ textAlign: "inherit" }}>
                 {parseDate(datetime)}{(from===userId && seen) ? ` ● Seen` : ""}
             </Caption>

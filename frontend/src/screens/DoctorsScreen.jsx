@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Headline, Searchbar, Subheading } from 'react-native-paper'
+import { Headline, Searchbar, Subheading, useTheme } from 'react-native-paper'
 import { ScrollView } from 'react-native'
 import { DoctorCard } from '../components/Doctors/DoctorCard'
 import stringSimilarity from "string-similarity"
@@ -13,6 +13,7 @@ import { getDoctorsCall } from '../api/doctors'
 import { Spinner } from '../components/Global/Spinner';
 
 export const DoctorsScreen = ({ navigation: { navigate } }) => {
+    const theme = useTheme();
     const dispatch = useDispatch();
     const { selectedDoctor } = useSelector(selectDoctor);
     
@@ -85,7 +86,7 @@ export const DoctorsScreen = ({ navigation: { navigate } }) => {
     }
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background2 }}>
             <Headline style={{ paddingLeft: 8 }}>
                 Find a Doctor
             </Headline>

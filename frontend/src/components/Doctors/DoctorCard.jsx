@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import { Avatar, Button, Subheading, Surface } from 'react-native-paper'
+import { Avatar, Button, Subheading, Surface, useTheme } from 'react-native-paper'
 import { Col, Grid, Row } from 'react-native-paper-grid'
 import { useDispatch } from 'react-redux'
 import { setContact } from '../../redux/slices/chatSlice'
@@ -15,6 +15,20 @@ export const DoctorCard = ({
     doctor_info,
     navigate,
 }) => {
+
+    const theme = useTheme();
+
+    const styles = StyleSheet.create({
+        surface: {
+            padding: "4px",
+            margin: "8px",
+            elevation: theme.elevation,
+            borderRadius: theme.roundness,
+        },
+        avatar: {
+            margin: "auto",
+        }
+    })
 
     const { expertise, description } = doctor_info || {};
     const dispatch = useDispatch();
@@ -84,14 +98,3 @@ export const DoctorCard = ({
         </Surface>
     )
 }
-
-const styles = StyleSheet.create({
-    surface: {
-        padding: "4px",
-        margin: "8px",
-        elevation: 3,
-    },
-    avatar: {
-        margin: "auto",
-    }
-})

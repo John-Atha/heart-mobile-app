@@ -8,11 +8,15 @@ import { store } from './redux/store';
 
 const theme = {
   ...DefaultTheme,
-  roundness: 3,
+  roundness: 7,
   colors: {
     ...DefaultTheme.colors,
-    primary: "#1769aa",
-  }
+    background: "white",
+    background2: "#e9f7f3",
+    text: "black",
+    primary: "green",
+  },
+  elevation: 3,
 }
 
 const queryClient = new QueryClient();

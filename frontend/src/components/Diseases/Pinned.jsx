@@ -23,7 +23,7 @@ export const Pinned = ({ diseases }) => {
     if (diseases?.length) {
         content = (
             diseases.map((disease) => (
-                <View style={{ margin: 4, width: "100%" }}>
+                <View style={{ margin: 4, width: "95%" }}>
                     <DiseaseCard {...disease} />
                 </View>
             ))

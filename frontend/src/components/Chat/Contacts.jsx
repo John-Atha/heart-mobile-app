@@ -68,6 +68,7 @@ const Contact = ({ contact, text, seen, datetime, sent }) => {
             padding: "2px",
             textAlign: "left",
             elevation: 0,
+            marginHorizontal: 4,
         }
     })
 

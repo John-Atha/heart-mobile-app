@@ -1,9 +1,12 @@
 import React from 'react';
 import { Dimensions } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
+import { useTheme } from 'react-native-paper';
 import { View } from 'react-native-web';
 
 export const Line = ({ data, labels, suffix }) => {
+    const theme = useTheme();
+
     return (
         <View>
             <LineChart
@@ -18,10 +21,11 @@ export const Line = ({ data, labels, suffix }) => {
                 withInnerLines={false}
                 withOuterLines={false}
                 chartConfig={{
-                    backgroundGradientFrom: "##47789e",
-                    backgroundGradientTo: "#1769aa",
+                    backgroundGradientFrom: "white",
+                    backgroundGradientTo: "white",
+                    // backgroundColor: "white",
                     decimalPlaces: 0, // optional, defaults to 2dp
-                    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                    color: (opacity = 1) => `rgba(0, 128, 0, ${opacity+0.2})`,
                     style: {
                         borderRadius: 16,
                     },
