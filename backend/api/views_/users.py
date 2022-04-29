@@ -1,5 +1,5 @@
 import json
-from api.serializers.users import UserSerializer
+from api.serializers.users import DoctorInfoSerializer, PatientInfoSerializer, UserSerializer
 from rest_framework.views import APIView
 from rest_framework import permissions
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -16,7 +16,11 @@ class Users(APIView):
     permission_classes = [permissions.AllowAny]
     
     def get(self, request):
-        users = User.objects.all()
+        kind = request.GET.get("kind")
+        if kind=="doctors":
+            users = User.objects.filter(is_doctor=True)
+        else:
+            users = User.objects.all()
         return OK(UserSerializer(users, many=True).data)
     
     def post(self, request):
@@ -67,11 +71,45 @@ class OneUser(APIView):
             body = json.loads(request.body)
         except Exception:
             return BadRequestException("Invalid body structure")
+
+        # username will always be the same with the email
         body['username'] = body.get('email') or user.username
+        # cannot change
+        body['is_doctor'] = user.is_doctor
+        
+        # build (create or merge) the user info serializer
+        if user.is_doctor:
+            info_data = body.get("doctor_info")
+            if info_data:
+                if user.doctor_info:
+                    info = DoctorInfoSerializer(user.doctor_info, data=info_data, partial=True)
+                else:
+                    info = DoctorInfoSerializer(data=info_data, partial=True)
+        else:
+            info_data = body.get("patient_info")
+            if info_data:
+                if user.patient_info:
+                    print("merging")
+                    info = PatientInfoSerializer(user.patient_info, data=info_data, partial=True)
+                else:
+                    print("creating")
+                    info = PatientInfoSerializer(data=info_data, partial=True)
+        if info_data and not info.is_valid():
+            return SerializerErrors(info)
+            
         user = UserSerializer(user, data=body, partial=True)
         if user.is_valid():
-            user.save()
-            return OK(user.data)
+            new_user = user.save()
+            if info_data:
+                new_info = info.save()
+                # attach the info object to the user
+                if new_user.is_doctor:
+                    new_user.doctor_info = new_info
+                else:
+                    new_user.patient_info = new_info
+                new_user.save()
+            
+            return OK(UserSerializer(new_user).data)
         return SerializerErrors(user)
 
     def put(self, request, id):

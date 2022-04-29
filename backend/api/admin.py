@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from api.models import Message, User
+from api.models import DoctorInfo, Message, PatientInfo, User
 
 # Register your models here.
 
@@ -24,6 +24,25 @@ class MessageAdmin(admin.ModelAdmin):
         'datetime',
     )
 
+class PatientInfoAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'age',
+        'height',
+        'weight',
+        'gender',
+        'user',
+    )
+
+class DoctorInfoAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'description',
+        'expertise',
+        'user',
+    )
 
 admin.site.register(User, UserAdmin)
 admin.site.register(Message, MessageAdmin)
+admin.site.register(DoctorInfo, DoctorInfoAdmin)
+admin.site.register(PatientInfo, PatientInfoAdmin)

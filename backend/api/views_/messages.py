@@ -23,7 +23,6 @@ class MessagesSummary(APIView):
                 continue
             messages.append(msg)
             seen_contacts.add(receiver.id if sender==user else sender.id)
-            print(seen_contacts)
         return OK(MessageSerializer(messages, many=True).data)
 
 
