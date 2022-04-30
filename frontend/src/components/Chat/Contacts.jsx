@@ -50,13 +50,13 @@ export const Contacts = ({ navigate }) => {
             console.log({ senderId: sender?.id, userId })
             if (sent) contact = receiver;
             return (
-                <Contact key={contact.id} {...props} contact={contact} sent={sent} />
+                <Contact key={contact.id} {...props} contact={contact} sent={sent} navigate={navigate} />
             )
         })
     )
 }
 
-const Contact = ({ contact, text, seen, datetime, sent }) => {
+const Contact = ({ contact, text, seen, datetime, sent, navigate }) => {
     const dispatch = useDispatch();
 
     const { username, first_name: firstName, last_name: lastName, id, doctor_info, patient_info } = contact || {};
@@ -75,6 +75,9 @@ const Contact = ({ contact, text, seen, datetime, sent }) => {
     const selectDoc = () => {
         console.log("pressing", id);
         dispatch(setContact({ firstName, lastName, ...contact }));
+        setTimeout(() => {
+            navigate("ChatContact")
+        }, 200)
     }
 
     return (

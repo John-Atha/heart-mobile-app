@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Button, Divider, Headline, Subheading, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux'
 import { setContact } from '../../redux/slices/chatSlice';
-import { selectDoctor } from '../../redux/slices/doctorSlice'
-import { PersonAvatar } from '../Global/PersonAvatar';
+import { clearDoctor, selectDoctor } from '../../redux/slices/doctorSlice'
+import { PersonAvatar } from '../../components/Global/PersonAvatar';
 
 const styles = StyleSheet.create({
     container: {
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     },
 })
 
-export const DoctorProfile = ({ navigate }) => {
+export const DoctorProfile = ({ navigation: { navigate } }) => {
     const theme = useTheme();
     const dispatch = useDispatch();
     const { selectedDoctor: { id, firstName, lastName, username, doctor_info } } = useSelector(selectDoctor);
@@ -31,6 +31,10 @@ export const DoctorProfile = ({ navigate }) => {
     const { description, expertise } = doctor_info || {};
 
     console.log({ doctor_info });
+
+    useEffect(() => {
+        () => dispatch(clearDoctor());
+    }, [])
 
     const startChat = () => {
         dispatch(setContact({

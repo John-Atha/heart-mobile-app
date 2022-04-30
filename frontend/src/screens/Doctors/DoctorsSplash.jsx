@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { Headline, Searchbar, Subheading, useTheme } from 'react-native-paper'
 import { ScrollView } from 'react-native'
-import { DoctorCard } from '../components/Doctors/DoctorCard'
+import { DoctorCard } from '../../components/Doctors/DoctorCard'
 import stringSimilarity from "string-similarity"
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useDispatch, useSelector } from 'react-redux'
-import { clearDoctor, selectDoctor } from '../redux/slices/doctorSlice'
-import { DoctorProfile } from '../components/Doctors/DoctorProfile'
+import { clearDoctor, selectDoctor } from '../../redux/slices/doctorSlice'
 import { useQuery } from 'react-query'
-import { queriesKeys } from '../api/queriesKeys'
-import { getDoctorsCall } from '../api/doctors'
-import { Spinner } from '../components/Global/Spinner';
+import { queriesKeys } from '../../api/queriesKeys'
+import { getDoctorsCall } from '../../api/doctors'
+import { Spinner } from '../../components/Global/Spinner';
 
-export const DoctorsScreen = ({ navigation: { navigate } }) => {
+export const DoctorsSplash = ({ navigation: { navigate } }) => {
     const theme = useTheme();
     const dispatch = useDispatch();
     const { selectedDoctor } = useSelector(selectDoctor);
@@ -28,6 +27,12 @@ export const DoctorsScreen = ({ navigation: { navigate } }) => {
     useEffect(() => {
         return () => dispatch(clearDoctor());
     }, [])
+
+    if (selectedDoctor) {
+        setTimeout(() => {
+            navigate("DoctorProfile");
+        })
+    }
 
     const isSimilar = ({ firstName, lastName }) => {
         if (!key) return true;
@@ -76,12 +81,6 @@ export const DoctorsScreen = ({ navigation: { navigate } }) => {
             <Subheading style={{ marginTop: 20 }}>
                 There are not any doctors matching your search
             </Subheading>
-        )
-    }
-
-    if (selectedDoctor) {
-        return (
-            <DoctorProfile navigate={navigate} />
         )
     }
 

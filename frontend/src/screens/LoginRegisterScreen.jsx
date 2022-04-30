@@ -7,22 +7,22 @@ import { Layout } from './Layout';
 
 export const LoginRegisterScreen = ({ navigation: { navigate }, ...props }) => {
 
-    const [page, setPage] = useState("login");
+    const [page, setPage] = useState(props.page);
 
     let title="Login";
-    let content = <LoginForm navigate={navigate} goToRegister={()=>setPage("register")} />;
+    let content = <LoginForm navigate={navigate} goToRegister={()=>navigate("Register")} />;
     if (page==="register") {
         title="Register";
-        content = <RegisterForm navigate={navigate} goToLogin={()=>setPage("login")} />;
+        content = <RegisterForm navigate={navigate} goToLogin={()=>navigate("Login")} />;
     }
 
     return (
         <Layout>
             <Surface style={styles.surface}>
                 <Image source={require('./logo_heart.png')} style={{ height: 100, width: 160, marginHorizontal: "auto", marginVertical: 16 }} />
-                <Headline style={styles.title}>
+                {/* <Headline style={styles.title}>
                     {title}
-                </Headline>
+                </Headline> */}
                 { content }
             </Surface>
         </Layout>

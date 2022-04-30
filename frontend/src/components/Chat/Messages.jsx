@@ -11,11 +11,12 @@ import { Spinner } from '../Global/Spinner';
 import { queriesKeys } from '../../api/queriesKeys';
 import { parseDate } from '../../helpers/parseDate';
 import { setDoctor } from '../../redux/slices/doctorSlice';
-import { setPatient } from '../../redux/slices/patientSlice';
+import { selectPatient, setPatient } from '../../redux/slices/patientSlice';
 
 export const Messages = ({ contact, navigate }) => {
     const dispatch = useDispatch();
     const queryClient = useQueryClient();
+    const { selectedPatient } = useSelector(selectPatient);
     const { firstName, lastName, username, id: contactId } = contact;
     const { user: { id: userId } } = useSelector(selectAuth);
     const { data, isLoading } = useQuery(
@@ -36,6 +37,12 @@ export const Messages = ({ contact, navigate }) => {
             console.log(err);
         })
     }, [])
+
+    useEffect(() => {
+        if (selectPatient) {
+            navigate("Patient");
+        }
+    }, [selectedPatient])
 
     const sendMessage = () => {
         console.log({ text });
@@ -59,9 +66,9 @@ export const Messages = ({ contact, navigate }) => {
         }
         else {
             dispatch(setPatient(contact));
-            setTimeout(() => {
-                navigate("Patient");
-            }, 500);
+            // setTimeout(() => {
+            //     navigate("Patient");
+            // }, 300);
         }
     }
 
