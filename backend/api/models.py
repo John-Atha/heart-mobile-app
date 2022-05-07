@@ -18,6 +18,10 @@ class PatientInfo(models.Model):
     weight = models.FloatField(null=True, blank=True)
     gender = models.IntegerField(choices=Gender.choices, null=True, blank=True)  
 
+class Disease(models.Model):
+    name = models.TextField(max_length=200, null=False, blank=False, unique=True)
+    description = models.TextField(max_length=2000, null=False, blank=False)
+
 # email === username always (if user is created through the register endpoint...)
 class User(AbstractUser):
     username = models.CharField(max_length=150, unique=True, null=False, blank=False)
@@ -27,6 +31,7 @@ class User(AbstractUser):
     is_doctor = models.BooleanField(default=False, null=False, blank=False)
     doctor_info = models.OneToOneField(DoctorInfo, on_delete=models.SET_NULL, null=True, blank=True, related_name="user")
     patient_info = models.OneToOneField(PatientInfo, on_delete=models.SET_NULL, null=True, blank=True, related_name="user")
+    disease = models.ForeignKey(Disease, on_delete=models.SET_NULL, null=True, related_name="users")
 
     def __str__(self):
         return f"id:{self.id},email:{self.email}"
@@ -40,3 +45,16 @@ class Message(models.Model):
 
     class Meta:
         ordering = ['datetime']
+
+class Metric(models.Model):
+    name = models.TextField(max_length=200, null=False, blank=False)
+    upper_limit = models.DecimalField(max_digits=5, decimal_places=2, null=False, blank=False)
+    lower_limit = models.DecimalField(max_digits=5, decimal_places=2, null=False, blank=False)
+    upper_warning = models.TextField(max_length=1000, null=False, blank=False)
+    lower_warning = models.TextField(max_length=1000, null=False, blank=False)
+
+class UserMetric(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, related_name='user_metrics')
+    metric = models.ForeignKey(Metric, on_delete=models.CASCADE,  null=False, blank=False, related_name='user_metrics')
+    value = models.DecimalField(max_digits=5, decimal_places=2, null=False, blank=False)
+    date = models.DateTimeField(null=False)

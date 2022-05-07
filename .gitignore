@@ -13,3 +13,4 @@ web-build/
 /environ
 # macOS
 .DS_Store
+/venv
