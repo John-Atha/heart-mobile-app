@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  client:
+    container_name: heartbit-fe
+    build:
+      context: ./frontend
+    ports:
+      - "19006:19006"
+  api:
+    container_name: heartbit-be
+    build:
+      context: ./backend
+    ports:
+      - "8000:80"
