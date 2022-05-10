@@ -15,3 +15,4 @@ web-build/
 .DS_Store
 /venv
 edit_hosts.sh
+docker-compose-dev.yaml
