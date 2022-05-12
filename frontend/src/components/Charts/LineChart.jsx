@@ -1,12 +1,9 @@
 import React from 'react';
 import { Dimensions } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
-import { useTheme } from 'react-native-paper';
 import { View } from 'react-native-web';
 
 export const Line = ({ data, labels, suffix }) => {
-    const theme = useTheme();
-
     return (
         <View>
             <LineChart

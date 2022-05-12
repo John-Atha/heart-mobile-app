@@ -16,6 +16,7 @@ import { ChatNavigator } from "./ChatNavigation";
 import { selectChatContact } from "../redux/slices/chatSlice";
 import { DoctorsNavigator } from "./DoctorsNavigation";
 import { LogoTitle } from "./Header";
+import { PatientMetrics } from "../screens/PatientMetrics";
 
 const Tab = createBottomTabNavigator();
 
@@ -45,7 +46,8 @@ export const MyTabs = () => {
                         { selectedPatient &&
                             <Tab.Screen name="Patient" component={PatientProfileScreen} options={{ ...options, unmountOnBlur: true}} />
                         }
-                        <Tab.Screen name="Diseases" component={DiseasesScreen} options={{ ...options, unmountOnBlur: true}} />
+                        {/* <Tab.Screen name="Diseases" component={DiseasesScreen} options={{ ...options, unmountOnBlur: true}} /> */}
+                        <Tab.Screen name="Metrics" component={PatientMetrics} options={{ ...options, unmountOnBlur: true}} />
                         <Tab.Screen name="Account" component={AccountScreen} options={{ ...options, unmountOnBlur: true}} />
                     </>
                 )
@@ -108,5 +110,6 @@ const icons = {
     Chat: "send",
     Diseases: "medical",
     Patient: "medical",
-    Doctors: "medkit"
+    Doctors: "medkit",
+    Metrics: "stats-chart",
 }

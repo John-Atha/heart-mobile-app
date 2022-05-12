@@ -8,25 +8,26 @@ export const BasicInfo = ({ navigate }) => {
     const dispatch = useDispatch();
     const { selectedPatient } = useSelector(selectPatient);
 
-    const { patientInfo } = selectedPatient || {};
-    const { age, weight, height, gender } = patientInfo || {};
+    const { patient_info } = selectedPatient || {};
+    const { age, weight, height, gender } = patient_info || {};
 
+    
     const metrics = [
         {
             name: "age",
             value: age,
         },
         {
-            name: "weight",
+            name: "weight(kg)",
             value: weight,
         },
         {
-            name: "height",
+            name: "height(m)",
             value: height,
         },
         {
             name: "gender",
-            value: gender<2 ? gender : "Unknown",
+            value: gender===0 ? "Male" : gender===1 ? "Female" : "Unknown",
         }
     ]
 
