@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from api.models import *
-from api.serializers.diseases import DiseaseSerializer
+# from api.serializers.diseases import DiseaseSerializer
 
 class DoctorInfoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -18,12 +18,15 @@ class PatientInfoSerializer(serializers.ModelSerializer):
             'height',
             'weight',
             'gender',
+            'smoking',
+            'drinking',
+            'exercising',
         ]
 
 class UserSerializer(serializers.ModelSerializer):
     doctor_info = DoctorInfoSerializer(many=False, read_only=True)
     patient_info = PatientInfoSerializer(many=False, read_only=True)
-    disease = DiseaseSerializer(many=False, read_only=True)
+    # disease = DiseaseSerializer(many=False, read_only=True)
     class Meta:
         model = User
         fields = [
@@ -35,5 +38,5 @@ class UserSerializer(serializers.ModelSerializer):
             'is_doctor',
             'doctor_info',
             'patient_info',
-            'disease'
+            # 'disease'
         ]

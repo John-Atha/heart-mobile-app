@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from api.models import DoctorInfo, Message, PatientInfo, User, Disease, Metric, UserMetric
+from api.models import DoctorInfo, Message, PatientInfo, Tag, User, Metric, UserMetric
 
 # Register your models here.
 
@@ -46,17 +46,16 @@ class MetricAdmin(admin.ModelAdmin):
     list_display = (
         'id',
         'name',
-        'upper_limit',
-        'lower_limit',
-        'upper_warning',
-        'lower_warning'
+        'description',
     )
 
-class DiseaseAdmin(admin.ModelAdmin):
+class TagAdmin(admin.ModelAdmin):
     list_display = (
         'id',
         'name',
-        'description'
+        'doctor',
+        'patient',
+        'is_disease',
     )
 
 class UserMetricAdmin(admin.ModelAdmin):
@@ -72,6 +71,6 @@ admin.site.register(User, UserAdmin)
 admin.site.register(Message, MessageAdmin)
 admin.site.register(DoctorInfo, DoctorInfoAdmin)
 admin.site.register(PatientInfo, PatientInfoAdmin)
-admin.site.register(Disease, DiseaseAdmin)
+admin.site.register(Tag, TagAdmin)
 admin.site.register(Metric, MetricAdmin)
 admin.site.register(UserMetric, UserMetricAdmin)

@@ -12,6 +12,7 @@ urlpatterns = [
     path('logged', Logged.as_view(), name='Logged'),
     path('users', Users.as_view(), name='Users'),
     path('users/<int:id>', OneUser.as_view(), name='OneUser'),
+    path('users/<int:id>/metrics', OneUserMetrics.as_view(), name='OneUserMetrics'),
     path('messages/summary', MessagesSummary.as_view(), name='MessagesSummary'),
     path('messages', Messages.as_view(), name='Messages'),
     path('messages/seen', MessagesSeen.as_view(), name='MarkMessagesAsSeen'),

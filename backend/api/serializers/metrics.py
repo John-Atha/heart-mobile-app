@@ -7,8 +7,5 @@ class MetricSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'name',
-            'upper_limit',
-            'lower_limit',
-            'upper_warning',
-            'lower_warning',
+            'description',
         ]

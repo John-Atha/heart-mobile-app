@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework import permissions
 from rest_framework_simplejwt.tokens import RefreshToken
 from api.models import *
+from api.serializers.metrics import MetricSerializer
 from .helpers import OK, BadRequestException, Deleted, NotFoundException, SerializerErrors, UnAuthorizedException
 
 class Logged(APIView):
@@ -117,3 +118,15 @@ class OneUser(APIView):
     
     def delete(self, request, id):
         return self.handle_update(request, id, "delete")
+
+
+class OneUserMetrics(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, id):
+        try:
+            user = User.objects.get(id=id)
+        except User.DoesNotExist:
+            return NotFoundException("User", id)
+        metrics = Metric.objects.all()
+        return OK(MetricSerializer(metrics, many=True).data)
