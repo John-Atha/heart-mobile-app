@@ -36,13 +36,15 @@ export const PatientForm = () => {
 
     useEffect(() => {
         if (patient_info) {
-            const { gender, age, weight, height, smoker } = patient_info || {};
+            const { gender, age, weight, height, smoking, drinking, exercising } = patient_info || {};
             setInitialValues({
                 gender: gender===null ? 2 : gender, // 0->Male, 1->Female, 2->Other
                 age: age || "",
                 weight: weight || "",
                 height: height || "",
-                smoker: smoker || false,
+                smoking,
+                drinking,
+                exercising,
             })
         }
     }, [patient_info])
@@ -54,9 +56,12 @@ export const PatientForm = () => {
                 height: values.height || null,
                 weight: values.weight || null,
                 age: values.age || null,
-                smoker: values.smoker,
+                smoking: values.smoking,
+                drinking: values.drinking,
+                exercising: values.exercising,
             }
         }
+        console.log({data});
         updateUserInfoCall(data, id)
         .then(response => {
             console.log(response.data);
@@ -86,105 +91,119 @@ export const PatientForm = () => {
         >
             {({ values, touched, errors, setFieldValue, handleChange, handleBlur, handleSubmit }) => (
                 <Form>
-                    <View style={styles.container}>
+                    <Grid>
                         <View>
-                            <Subheading>Gender</Subheading>
-                            <View>
-                                <Checkbox.Item
-                                    style={styles.checkBox}
-                                    status={values.gender==0 ? 'checked' : 'unchecked'}
-                                    onPress={()=>setFieldValue("gender", 0)}
-                                    label="Male"
-                                    position='leading'
-                                />
-                                <Checkbox.Item
-                                    style={styles.checkBox}
-                                    status={values.gender==1 ? 'checked' : 'unchecked'}
-                                    onPress={()=>setFieldValue("gender", 1)}
-                                    label="Female"
-                                    position='leading'
-                                />
-                                <Checkbox.Item
-                                    style={styles.checkBox}
-                                    status={values.gender==2 ? 'checked' : 'unchecked'}
-                                    onPress={()=>setFieldValue("gender", 2)}
-                                    label="Other"
-                                    position='leading'
-                                />
-                            </View>
+                            <Row>
+                                <Col>
+                                    <Subheading>Gender</Subheading>
+                                    <Checkbox.Item
+                                        style={{ width: 50 }}
+                                        status={values.gender==0 ? 'checked' : 'unchecked'}
+                                        onPress={()=>setFieldValue("gender", 0)}
+                                        label="Male"
+                                        position='leading'
+                                    />
+                                    <Checkbox.Item
+                                        style={{ width: 50 }}
+                                        status={values.gender==1 ? 'checked' : 'unchecked'}
+                                        onPress={()=>setFieldValue("gender", 1)}
+                                        label="Female"
+                                        position='leading'
+                                    />
+                                    <Checkbox.Item
+                                        style={{ width: 50 }}
+                                        status={values.gender==2 ? 'checked' : 'unchecked'}
+                                        onPress={()=>setFieldValue("gender", 2)}
+                                        label="Other"
+                                        position='leading'
+                                    />
+                                </Col>
+                                <Col>
+                                    <Subheading>Lifestyle</Subheading>
+                                    <Checkbox.Item
+                                        style={{ width: 50 }}
+                                        status={values.smoking ? 'checked' : 'unchecked'}
+                                        onPress={()=>setFieldValue("smoking", !values.smoking)}
+                                        label="Smoking"
+                                        position='leading'
+                                    />
+                                    <Checkbox.Item
+                                        style={{ width: 50 }}
+                                        status={values.drinking ? 'checked' : 'unchecked'}
+                                        onPress={()=>setFieldValue("drinking", !values.drinking)}
+                                        label="Drinking"
+                                        position='leading'
+                                    />
+                                    <Checkbox.Item
+                                        style={{ width: 50 }}
+                                        status={values.exercising ? 'checked' : 'unchecked'}
+                                        onPress={()=>setFieldValue("exercising", !values.exercising)}
+                                        label="Exercising"
+                                        position='leading'
+                                    />
+                                </Col>
+                            </Row>
                         </View>
-                    </View>
-                    <View>
-                        <Row>
-                            <Col>
-                                <Field
-                                    as={TextInput}
-                                    keyboardType="number-pad"
-                                    mode="outlined"
-                                    label="Height(m)"
-                                    name="height"
-                                    onChangeText={handleChange("height")}
-                                    onBlur={handleBlur("height")}
-                                    error={errors["height"] && touched["height"]}
-                                    value={values.height}
-                                    errors={errors}
-                                    touched={touched}
-                                    style={{ marginVertical: 16 }}
-                                />
-                                { renderHelperText({ name: "height", errors, touched, msg: "Must be a positive number" }) }
-                            </Col>
-                            <Col>
-                                <Field
-                                    as={TextInput}
-                                    keyboardType="number-pad"
-                                    mode="outlined"
-                                    label="Weight(kg)"
-                                    name="weight"
-                                    onChangeText={handleChange("weight")}
-                                    onBlur={handleBlur("weight")}
-                                    value={values.weight}
-                                    error={errors["weight"] && touched["weight"]}
-                                    errors={errors}
-                                    touched={touched}
-                                    style={{ marginVertical: 16 }}
-                                />
-                                { renderHelperText({ name: "weight", errors, touched, msg: "Must be a positive number" }) }
-                            </Col>
-                        </Row>
-                    </View>
-                    <View>
-                        <Row>
-                            <Col>
-                                <Field
-                                    as={TextInput}
-                                    keyboardType="number-pad"
-                                    mode="outlined"
-                                    label="Age"
-                                    name="age"
-                                    onChangeText={handleChange("age")}
-                                    onBlur={handleBlur("age")}
-                                    value={values.age}
-                                    error={errors["age"] && touched["age"]}
-                                    errors={errors}
-                                    touched={touched}
-                                    style={{ marginVertical: 4 }}
-                                />
-                                { renderHelperText({ name: "age", errors, touched }) }
-                            </Col>
-                            <Col>
-                                <Checkbox.Item
-                                    style={{ ...styles.checkbox, width: 50 }}
-                                    status={values.smoker ? 'checked' : 'unchecked'}
-                                    onPress={()=>setFieldValue("smoker", !values.smoker)}
-                                    label="Smoking"
-                                    position='leading'
-                                />
-                            </Col>
-                        </Row>
-                    </View>
-                    <Button style={{ marginVertical: 16, paddingVertical: 8 }} onPress={handleSubmit} mode="contained">
-                        Update
-                    </Button>
+                        <View>
+                            <Row>
+                                <Col>
+                                    <Field
+                                        as={TextInput}
+                                        keyboardType="number-pad"
+                                        mode="outlined"
+                                        label="Height(m)"
+                                        name="height"
+                                        onChangeText={handleChange("height")}
+                                        onBlur={handleBlur("height")}
+                                        error={errors["height"] && touched["height"]}
+                                        value={values.height}
+                                        errors={errors}
+                                        touched={touched}
+                                        style={{ marginVertical: 16 }}
+                                    />
+                                    { renderHelperText({ name: "height", errors, touched, msg: "Must be a positive number" }) }
+                                </Col>
+                                <Col>
+                                    <Field
+                                        as={TextInput}
+                                        keyboardType="number-pad"
+                                        mode="outlined"
+                                        label="Weight(kg)"
+                                        name="weight"
+                                        onChangeText={handleChange("weight")}
+                                        onBlur={handleBlur("weight")}
+                                        value={values.weight}
+                                        error={errors["weight"] && touched["weight"]}
+                                        errors={errors}
+                                        touched={touched}
+                                        style={{ marginVertical: 16 }}
+                                    />
+                                    { renderHelperText({ name: "weight", errors, touched, msg: "Must be a positive number" }) }
+                                </Col>
+                            </Row>
+                        </View>
+                        <View>
+                            <Field
+                                as={TextInput}
+                                keyboardType="number-pad"
+                                mode="outlined"
+                                label="Age"
+                                name="age"
+                                onChangeText={handleChange("age")}
+                                onBlur={handleBlur("age")}
+                                value={values.age}
+                                error={errors["age"] && touched["age"]}
+                                errors={errors}
+                                touched={touched}
+                                style={{ marginVertical: 4 }}
+                            />
+                            { renderHelperText({ name: "age", errors, touched }) }
+                        </View>
+                        <Button style={{ marginVertical: 16, paddingVertical: 8 }} onPress={handleSubmit} mode="contained">
+                            Update
+                        </Button>
+                    </Grid>
+
                 </Form>
             )}
         </Formik>

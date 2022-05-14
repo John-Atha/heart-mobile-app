@@ -32,14 +32,14 @@ export const PatientMetrics = () => {
                 </Headline>
             </View>
             <Divider style={{ margin: 8}} />
-            <Surface style={{
+            {/* <Surface style={{
                 backgroundColor: "white",
                 padding: 4,
                 borderRadius: theme.roundness,
                 elevation: theme.elevation,
             }}>
                 <MetricsForm />
-            </Surface>
+            </Surface> */}
             <div style={{ marginTop: 5 }} />
             <Carousel pageWidth={Dimensions.get("window").width-10} sneak={23}>
                 <StatisticsCard title="Average Heart Rate" labels={labels} data={dataa} suffix={"p/m"} />
