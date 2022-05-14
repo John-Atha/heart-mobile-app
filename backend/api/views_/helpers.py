@@ -18,3 +18,6 @@ def SerializerErrors(serializer):
 
 def Deleted():
     return OK("Deleted successfully")
+
+def SavedSuccessfully():
+    return OK("Saved successfully")

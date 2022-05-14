@@ -56,12 +56,17 @@ class Metric(models.Model):
     name = models.TextField(max_length=200, null=False, blank=False)
     description = models.TextField(max_length=200, null=True, blank=True)
 
+
+class UserMetricsGroup(models.Model):
+    datetime = models.DateTimeField(default=datetime.now, null=False, blank=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, related_name='metrics_groups')
+
 # each user can pass his metrics on a certain date 
 class UserMetric(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, related_name='user_metrics')
-    metric = models.ForeignKey(Metric, on_delete=models.CASCADE,  null=False, blank=False, related_name='user_metrics')
+    metric = models.ForeignKey(Metric, on_delete=models.CASCADE,  null=False, blank=False, related_name='user_metric')
     value = models.DecimalField(max_digits=5, decimal_places=2, null=False, blank=False)
-    date = models.DateTimeField(null=False)
+    group = models.ForeignKey(UserMetricsGroup, on_delete=models.CASCADE, null=True, blank=True, related_name='metrics')
+
 
 # each doctor can assign two limits for a certain user and metric
 class UserDoctorLimits(models.Model):

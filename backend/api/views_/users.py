@@ -1,11 +1,15 @@
+from collections import defaultdict
+from datetime import tzinfo
 import json
+from time import tzname
+from typing import List
 from api.serializers.users import DoctorInfoSerializer, PatientInfoSerializer, UserSerializer
 from rest_framework.views import APIView
 from rest_framework import permissions
 from rest_framework_simplejwt.tokens import RefreshToken
 from api.models import *
-from api.serializers.metrics import MetricSerializer
-from .helpers import OK, BadRequestException, Deleted, NotFoundException, SerializerErrors, UnAuthorizedException
+from api.serializers.usermetrics import UserMetricSerializer, UserMetricsGroupSerializer
+from .helpers import OK, BadRequestException, Deleted, NotFoundException, SavedSuccessfully, SerializerErrors, UnAuthorizedException
 
 class Logged(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -120,13 +124,68 @@ class OneUser(APIView):
         return self.handle_update(request, id, "delete")
 
 
+def is_form_open(user: User):
+    group = user.metrics_groups.last()
+    try:
+        days = Config.objects.get(name='submissions_interval')
+    except Config.DoesNotExist:
+        return True
+    date_diff = (datetime.now()-group.datetime.replace(tzinfo=None)).days
+    if date_diff<int(days.value):
+        return False
+    return True
+
 class OneUserMetrics(APIView):
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, id):
         try:
             user = User.objects.get(id=id)
         except User.DoesNotExist:
             return NotFoundException("User", id)
-        metrics = Metric.objects.all()
-        return OK(MetricSerializer(metrics, many=True).data)
+        # todo: add permissions (either the patient or one of his/her doctors)
+        
+        last_group = request.GET.get("last")
+        if last_group:
+            group = user.metrics_groups.last()
+            data = UserMetricsGroupSerializer(group).data
+            data["open"] = is_form_open(user)
+            return OK(data)
+        groups = user.metrics_groups.order_by('-datetime')
+        return OK(UserMetricsGroupSerializer(groups, many=True).data)
+    
+    def post(self, request, id):
+        # authorize
+        try:
+            user = User.objects.get(id=id)
+        except User.DoesNotExist:
+            return NotFoundException("User", id)
+        if request.user!=user:
+            print(user)
+            print(request.user)
+            return UnAuthorizedException()
+
+        # validate previous form submission date        
+        if not is_form_open(user):                
+            return BadRequestException(f"You have to wait to post another form")
+        # build group and save
+        body = json.loads(request.body)
+        try:
+            group = UserMetricsGroup(user=user)
+            group.save()
+            for user_metric_data in body:
+                metric_name = user_metric_data.get('metric')
+                try:
+                    metric = Metric.objects.get(name=metric_name)
+                except Metric.DoesNotExist:
+                    group.delete()
+                    return NotFoundException("Metric", metric_name)
+                user_metric = UserMetric(metric=metric, group=group)
+                user_metric = UserMetricSerializer(user_metric, data=user_metric_data)
+                if user_metric.is_valid():
+                    user_metric = user_metric.save()
+                    return SavedSuccessfully()
+                else:
+                    return SerializerErrors(user_metric)
+        except Exception:
+            return BadRequestException("Invalid body")

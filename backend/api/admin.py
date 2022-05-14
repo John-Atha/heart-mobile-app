@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from api.models import DoctorInfo, Message, PatientInfo, Tag, User, Metric, UserMetric
+from api.models import DoctorInfo, Message, PatientInfo, Tag, User, Metric, UserMetric, UserMetricsGroup
 
 # Register your models here.
 
@@ -61,10 +61,14 @@ class TagAdmin(admin.ModelAdmin):
 class UserMetricAdmin(admin.ModelAdmin):
     list_display = (
         'id',
-        'user',
         'metric',
         'value',
-        'date'
+    )
+
+class UserMetricsGroupAdmin(admin.ModelAdmin):
+    list_display = (
+        'user',
+        'datetime',
     )
 
 admin.site.register(User, UserAdmin)
@@ -74,3 +78,4 @@ admin.site.register(PatientInfo, PatientInfoAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Metric, MetricAdmin)
 admin.site.register(UserMetric, UserMetricAdmin)
+admin.site.register(UserMetricsGroup, UserMetricsGroupAdmin)
