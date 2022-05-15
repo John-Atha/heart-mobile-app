@@ -1,4 +1,5 @@
 from datetime import datetime
+from enum import unique
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 # Create your models here.
@@ -30,7 +31,12 @@ class User(AbstractUser):
     is_doctor = models.BooleanField(default=False, null=False, blank=False)
     doctor_info = models.OneToOneField(DoctorInfo, on_delete=models.SET_NULL, null=True, blank=True, related_name="user")
     patient_info = models.OneToOneField(PatientInfo, on_delete=models.SET_NULL, null=True, blank=True, related_name="user")
-    metrics = models.ManyToManyField('self', through='UserDoctorLimits')
+    limits = models.ManyToManyField(
+        'self',
+        symmetrical=False,
+        through='LimitsGroup',
+        through_fields=('patient', 'doctor')
+    )
     
     def __str__(self):
         return f"id:{self.id},email:{self.email}"
@@ -65,18 +71,25 @@ class UserMetricsGroup(models.Model):
 class UserMetric(models.Model):
     metric = models.ForeignKey(Metric, on_delete=models.CASCADE,  null=False, blank=False, related_name='user_metric')
     value = models.DecimalField(max_digits=5, decimal_places=2, null=False, blank=False)
-    group = models.ForeignKey(UserMetricsGroup, on_delete=models.CASCADE, null=True, blank=True, related_name='metrics')
+    group = models.ForeignKey(UserMetricsGroup, on_delete=models.CASCADE, null=False, blank=False, related_name='metrics')
 
+class LimitsGroup(models.Model):
+    doctor = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, related_name='doctor_limits_groups')
+    patient = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, related_name='patient_limits_groups')    
+    date = models.DateTimeField(default=datetime.today, null=False, blank=False)
+
+    class Meta:
+        unique_together = ['doctor', 'patient']
 
 # each doctor can assign two limits for a certain user and metric
-class UserDoctorLimits(models.Model):
-    doctor = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, related_name='doctor_limits')
-    patient = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, related_name='patient_limits')
-    metric = models.ForeignKey(Metric, on_delete=models.CASCADE,  null=False, blank=False, related_name='metric_limits')
-    value = models.FloatField(null=False, blank=False)
-    date = models.DateTimeField(default=datetime.today, null=False, blank=False)
+class Limit(models.Model):
+    group = models.ForeignKey(LimitsGroup, on_delete=models.CASCADE, null=False, blank=False, related_name='limits')
+    metric = models.ForeignKey(Metric, on_delete=models.CASCADE,  null=False, blank=False, related_name='limits')
     upper_limit = models.FloatField(null=False, blank=False)
     lower_limit = models.FloatField(null=False, blank=False)
+
+    class Meta:
+        unique_together = ['group', 'metric']
 
 '''
 some global variables that will be kept like
