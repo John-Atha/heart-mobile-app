@@ -39,7 +39,7 @@ export const Messages = ({ contact, navigate }) => {
     }, [])
 
     useEffect(() => {
-        if (selectPatient) {
+        if (selectedPatient) {
             navigate("Patient");
         }
     }, [selectedPatient])
@@ -62,13 +62,12 @@ export const Messages = ({ contact, navigate }) => {
     const goToProfile = () => {
         if (contact.is_doctor) {
             dispatch(setDoctor(contact));
-            navigate("Doctors");    
+            navigate("Doctors"); 
         }
         else {
             dispatch(setPatient(contact));
-            // setTimeout(() => {
-            //     navigate("Patient");
-            // }, 300);
+            navigate("Patients"); 
+
         }
     }
 

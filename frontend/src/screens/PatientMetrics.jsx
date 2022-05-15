@@ -36,7 +36,7 @@ export const PatientMetrics = () => {
             <Divider style={{ margin: 8}} />
             <Tabs
                 views={{
-                    "Statistics": <MetricsStats />,
+                    "Statistics": <MetricsStats id={id} />,
                     "Analytics": <MetricsAnalytics id={id} />,
                 }}
             />

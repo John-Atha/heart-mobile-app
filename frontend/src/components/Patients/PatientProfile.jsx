@@ -17,7 +17,9 @@ export const PatientProfile = ({ navigate }) => {
         'Info': <BasicInfo navigate={navigate} />,
         'History': (
             <View>
-                <MetricsStats />
+                {/* <Headline style={{ textAlign: "center" }}>Statistics</Headline> */}
+                <MetricsStats id={id} />
+                {/* <Headline style={{ textAlign: "center" }}>Analytics</Headline> */}
                 <MetricsAnalytics id={id} />
             </View>
         )

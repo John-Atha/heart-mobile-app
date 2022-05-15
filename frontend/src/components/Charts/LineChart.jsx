@@ -14,7 +14,7 @@ export const Line = ({ data, labels, suffix }) => {
                 width={Dimensions.get("window").width} // from react-native
                 height={220}
                 yAxisSuffix={suffix}
-                withDots={false}
+                withDots={!data || data?.length===1}
                 withInnerLines={false}
                 withOuterLines={false}
                 chartConfig={{

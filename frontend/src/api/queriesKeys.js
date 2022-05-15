@@ -3,6 +3,7 @@ export const queriesKeys = {
     contactMessages: `contact/messages/get`,
     doctors: `doctors/get`,
     getLastMetrics: `metrics/last/get`,
+    getMetricsStats: `metrics/stats/get`,
     getQuotes: `quotes/get`,
     getPatients: 'patients/get',
 }

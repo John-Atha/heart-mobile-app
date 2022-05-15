@@ -41,7 +41,7 @@ export const BasicInfo = ({ navigate }) => {
     
     return (
         <Card style={{ margin: 4 }}>
-            <Card.Title title="Basic info" />
+            {/* <Card.Title title="Basic info" /> */}
             <Card.Content>
                 <MetricsTable metrics={metrics} />
                 <Button
