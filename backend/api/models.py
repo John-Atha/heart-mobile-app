@@ -96,7 +96,7 @@ class Quote(models.Model):
 
 # each doctor can post multiple notes to a patient's profile
 class Note(models.Model):
-    doctor = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, related_name='doctor_notes')
-    patient = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, related_name='patient_notes')
+    doctor = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, related_name='sent_notes')
+    patient = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, related_name='received_notes')
     text = models.TextField(max_length=500, null=False, blank=False)
     datetime = models.DateTimeField(default=datetime.now, null=False, blank=False)
