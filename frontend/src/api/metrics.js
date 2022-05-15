@@ -1,26 +1,20 @@
 import axios from "axios";
 import config from "./config";
-import { buildAuthHeader } from "./helpers";
+import { buildAuthHeader, getRequest } from "./helpers";
 
 axios.defaults.baseURL = config.apiUrl;
 
-export const getLatestMetrics = async (id) => {
+export const getUserMetrics = async ({ id, last=false }) => {
     const headers = await buildAuthHeader();
+    const requestUrl = `users/${id}/metrics`;
     const params = {
-        last: true,
-    }
-    try {
-        const { data } = await axios.get(
-            `users/${id}/metrics`, {
-                headers,
-                params,
-            }
-        );
-        return data;
-    }
-    catch (err) {
-        throw err;
-    }
+        ...(last && { last }),
+    };
+    return getRequest({
+        requestUrl,
+        headers,
+        params,
+    });
 }
 
 export const postMetrics = async (id, data) => {

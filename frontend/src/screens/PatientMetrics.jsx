@@ -1,17 +1,17 @@
-import React from 'react'
-import { Button, Divider, Headline, Surface, useTheme } from 'react-native-paper'
+import React, { useState } from 'react'
+import { Button, Divider, Headline, useTheme } from 'react-native-paper'
 import { StyleSheet, Text, View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
 import { Layout } from './Layout';
+import { MetricsStats } from '../components/Patients/MetricsStats';
+import { MetricsAnalytics } from '../components/Patients/MetricsAnalytics';
+import { useSelector } from 'react-redux';
 import { selectAuth } from '../redux/slices/authSlice';
-import { MetricsForm } from '../components/Patients/MetricsForm';
-import Carousel from 'react-native-carousel-control';
-import { Dimensions } from 'react-native-web';
-import { StatisticsCard } from '../components/Home/StatisticsCard';
-import { dataa, labels } from '../data/statistics';
+import Tabs from '../components/Global/Tabs';
+import { Col, Grid, Row } from 'react-native-paper-grid';
 
 export const PatientMetrics = () => {
     const theme = useTheme();
+    const [page, setPage] = useState("Statistics");
 
     const styles = StyleSheet.create({
         container: {
@@ -24,6 +24,8 @@ export const PatientMetrics = () => {
         }
     });
 
+    const { user: { id } } = useSelector(selectAuth);
+
     return (
         <Layout>
             <View style={styles.container}>
@@ -32,24 +34,12 @@ export const PatientMetrics = () => {
                 </Headline>
             </View>
             <Divider style={{ margin: 8}} />
-            {/* <Surface style={{
-                backgroundColor: "white",
-                padding: 4,
-                borderRadius: theme.roundness,
-                elevation: theme.elevation,
-            }}>
-                <MetricsForm />
-            </Surface> */}
-            <div style={{ marginTop: 5 }} />
-            <Carousel pageWidth={Dimensions.get("window").width-10} sneak={23}>
-                <StatisticsCard title="Average Heart Rate" labels={labels} data={dataa} suffix={"p/m"} />
-                <StatisticsCard title="Average Blood Pressure" labels={labels} data={dataa} />
-            </Carousel>
-            <div style={{ marginTop: 5 }} />
-            <Carousel pageWidth={Dimensions.get("window").width-10} sneak={23}>
-                <StatisticsCard title="Daily Sleep time" labels={labels} data={dataa} suffix="h" />
-                <StatisticsCard title="Daily Excersice time" labels={labels} data={dataa} suffix="h"/>
-            </Carousel>
+            <Tabs
+                views={{
+                    "Statistics": <MetricsStats />,
+                    "Analytics": <MetricsAnalytics id={id} />,
+                }}
+            />
         </Layout>
     )
 }

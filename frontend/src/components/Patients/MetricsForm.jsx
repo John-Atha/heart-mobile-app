@@ -3,7 +3,7 @@ import React from 'react'
 import { Button, Headline, Subheading, Text, TextInput } from 'react-native-paper';
 import { useQuery, useQueryClient } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux'
-import { getLatestMetrics, postMetrics } from '../../api/metrics';
+import { getUserMetrics, postMetrics } from '../../api/metrics';
 import { queriesKeys } from '../../api/queriesKeys';
 import { MetricsValidationSchema } from '../../formHelpers/validations/metricsValidationSchema';
 import { selectAuth } from '../../redux/slices/authSlice';
@@ -20,7 +20,7 @@ export const MetricsForm = () => {
 
     const { data, isLoading } = useQuery(
         [queriesKeys['getLastMetrics'], id],
-        () => getLatestMetrics(id), {
+        () => getUserMetrics({ id, last: true }), {
             enabled: !!id,
             cacheTime: 0,
             refetchOnWindowFocus: false,

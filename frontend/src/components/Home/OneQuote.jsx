@@ -11,8 +11,13 @@ export const OneQuote = ({ text }) => {
             borderRadius: theme.roundness,
             minHeight: 70,
         }}>
-            <Text style={{ margin: "auto", fontSize: 17, textAlign: "center" }}>
-                {text}
+            <Text style={{
+                margin: "auto",
+                fontSize: 17,
+                textAlign: "center",
+                fontStyle: "italic",
+            }}>
+                "{text}"
             </Text>
         </Surface>
     )

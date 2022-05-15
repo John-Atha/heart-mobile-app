@@ -1,8 +1,10 @@
 import React from 'react'
 import { Button, Card, DataTable } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
+import { genderToStr } from '../../helpers/genderToStr';
 import { selectChatContact, setContact } from '../../redux/slices/chatSlice';
 import { selectPatient } from '../../redux/slices/patientSlice';
+import { MetricsTable } from './MetricsTable';
 
 export const BasicInfo = ({ navigate }) => {
     const dispatch = useDispatch();
@@ -27,7 +29,7 @@ export const BasicInfo = ({ navigate }) => {
         },
         {
             name: "gender",
-            value: gender===0 ? "Male" : gender===1 ? "Female" : "Unknown",
+            value: genderToStr(gender),
         }
     ]
 
@@ -41,21 +43,7 @@ export const BasicInfo = ({ navigate }) => {
         <Card style={{ margin: 4 }}>
             <Card.Title title="Basic info" />
             <Card.Content>
-                <DataTable>
-                    <DataTable.Header>
-                        <DataTable.Title>Metric</DataTable.Title>
-                        <DataTable.Title numeric>Value</DataTable.Title>
-                    </DataTable.Header>
-
-                    {metrics.map(({ name, value }) => {
-                        return (
-                            <DataTable.Row>
-                                <DataTable.Cell>{name}</DataTable.Cell>
-                                <DataTable.Cell numeric>{ value || "Unknown" }</DataTable.Cell>
-                            </DataTable.Row>
-                        )
-                    })}
-                </DataTable>
+                <MetricsTable metrics={metrics} />
                 <Button
                     style={{ marginTop: 8 }}
                     icon={"send"}

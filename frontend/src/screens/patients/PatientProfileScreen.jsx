@@ -3,10 +3,11 @@ import { ScrollView } from 'react-native';
 import { Headline } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux'
-import { Contacts } from '../components/Chat/Contacts';
-import { PersonAvatar } from '../components/Global/PersonAvatar';
-import { PatientProfile } from '../components/Patients/PatientProfile';
-import { clearPatient, selectPatient } from '../redux/slices/patientSlice'
+import { Contacts } from '../../components/Chat/Contacts';
+import { PersonAvatar } from '../../components/Global/PersonAvatar';
+import { PatientProfile } from '../../components/Patients/PatientProfile';
+import { clearPatient, selectPatient } from '../../redux/slices/patientSlice'
+import { Layout } from '../Layout';
 
 export const PatientProfileScreen = ({ navigation: { navigate } }) => {
     const dispatch = useDispatch();
@@ -18,15 +19,16 @@ export const PatientProfileScreen = ({ navigation: { navigate } }) => {
     }, [])
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
+        <Layout>
             <Headline style={{ paddingLeft: 8, margin: 8 }}>
-                <PersonAvatar firstName={firstName} lastName={lastName} />
+                <PersonAvatar
+                    firstName={firstName}
+                    lastName={lastName}
+                />
                 {firstName} {lastName}
             </Headline>
-            <ScrollView style={{ maxHeight: "inherit" }}>
-                <PatientProfile navigate={navigate} />
-            </ScrollView>
-        </SafeAreaView>
+            <PatientProfile navigate={navigate} />
+        </Layout>
     )
 
 }
