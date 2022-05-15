@@ -8,6 +8,7 @@ import { Spinner } from '../Global/Spinner';
 import { MetricsGroupAccordion } from './MetricsGroupAccordion';
 
 export const MetricsAnalytics = ({ id }) => {
+
     const { data, isLoading } = useQuery(
         [queriesKeys['getLastMetrics'], id],
         () => getUserMetrics({ id }), {
@@ -32,7 +33,7 @@ export const MetricsAnalytics = ({ id }) => {
     }
     
     return (
-        <View>
+        <View style={{ margin: 8 }}>
             {data.map(({ id, datetime, metrics }) => (
                 <Surface style={{ marginTop: 8 }}>
                     <MetricsGroupAccordion

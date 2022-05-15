@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import MaterialTabs from 'react-native-material-tabs';
-import { Button, useTheme } from 'react-native-paper';
+import { Button } from 'react-native-paper';
 import { StyleSheet, View } from 'react-native';
 import { ScrollView } from 'react-native-web';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -19,7 +18,6 @@ const styles = StyleSheet.create({
 })
 
 export default function Tabs({ views }) {
-  const theme = useTheme();
 
   const [selected, setSelected] = useState(Object.keys(views || {})?.[0]);
   const [routes, setRoutes] = useState(views || {});

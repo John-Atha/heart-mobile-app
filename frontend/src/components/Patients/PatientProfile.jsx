@@ -5,14 +5,14 @@ import { useSelector } from 'react-redux'
 import { selectPatient } from '../../redux/slices/patientSlice'
 import { PersonAvatar } from '../Global/PersonAvatar'
 import Tabs from '../Global/Tabs'
+import { Notes } from '../Notes/Notes'
 import { BasicInfo } from './BasicInfo'
 import { MetricsAnalytics } from './MetricsAnalytics'
 import { MetricsStats } from './MetricsStats'
 
-export const PatientProfile = ({ navigate }) => {
+export const PatientProfile = ({ navigation: { navigate } }) => {
     const { selectedPatient } = useSelector(selectPatient);
     const { id, firstName, lastName } = selectedPatient;
-
     const tabs = {
         'Info': <BasicInfo navigate={navigate} />,
         'History': (
@@ -22,7 +22,8 @@ export const PatientProfile = ({ navigate }) => {
                 {/* <Headline style={{ textAlign: "center" }}>Analytics</Headline> */}
                 <MetricsAnalytics id={id} />
             </View>
-        )
+        ),
+        'Notes': <Notes id={id} />,
     }
     return (
         <>

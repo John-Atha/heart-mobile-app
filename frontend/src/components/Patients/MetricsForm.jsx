@@ -180,6 +180,10 @@ export const MetricsForm = () => {
                                 onPress={handleSubmit}
                                 mode="contained"
                                 disabled={!data?.open}
+                                style={{
+                                    marginHorizontal: 16,
+                                    paddingVertical: 4,
+                                }}
                                 >
                                 Submit
                             </Button>

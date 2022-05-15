@@ -1,6 +1,6 @@
 import moment from 'moment'
 import React from 'react'
-import { Card, List, Surface, Text } from 'react-native-paper'
+import { Card, List, Surface, Text, useTheme } from 'react-native-paper'
 import { MetricsTable } from './MetricsTable'
 
 export const MetricsGroupAccordion = ({ datetime, metrics }) => {

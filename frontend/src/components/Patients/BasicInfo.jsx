@@ -34,9 +34,10 @@ export const BasicInfo = ({ navigate }) => {
     ]
 
     const chat = () => {
-        navigate("Chat");
         dispatch(setContact(selectedPatient));
-        navigate("Chat");
+        setTimeout(()=> {
+            navigate("Chat");
+        });
     }
     
     return (

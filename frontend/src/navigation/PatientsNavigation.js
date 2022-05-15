@@ -7,8 +7,16 @@ const Stack = createNativeStackNavigator();
 export const PatientsNavigation = () => {
     return (
         <Stack.Navigator>
-            <Stack.Screen options={{ headerShown: false, unmountOnBlur: true }} name="Patients" component={PatientsSplash} />
-            <Stack.Screen options={{ headerShown: false, unmountOnBlur: true }} name="PatientProfile" component={PatientProfile} />
+            <Stack.Screen
+                options={{ headerShown: false, unmountOnBlur: true }}
+                name="Patients"
+                component={PatientsSplash}
+            />
+            <Stack.Screen
+                options={{ headerShown: false, unmountOnBlur: true }}
+                name="PatientProfile"
+                component={PatientProfile}
+            />
         </Stack.Navigator>
     )
 }
