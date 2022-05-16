@@ -50,13 +50,13 @@ export const MetricsForm = () => {
         }
         if (values.systolic_pressure) {
             data.push({
-                metric: "Systolic pressure",
+                metric: "Systolic blood pressure",
                 value: parseFloat(values.systolic_pressure),
             });
         }
         if (values.diastolic_pressure) {
             data.push({
-                metric: "Diastolic pressure",
+                metric: "Diastolic blood pressure",
                 value: parseFloat(values.diastolic_pressure),
             });
         }

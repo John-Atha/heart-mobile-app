@@ -46,7 +46,7 @@ class OneUserLimitsGroup(APIView):
         group.limits.all().delete()
         try:
             body = json.loads(request.body)
-            for limit_data in body:
+            for limit_data in body.get("limits"):
                 metric_name = limit_data.get("metric")
                 if metric_name:
                     try:
@@ -68,6 +68,8 @@ class OneUserLimitsGroup(APIView):
             print(e)
             rollback()
             return BadRequestException("Invalid body")
+        group.receive_notification = bool(body.get("receive_notification"))
+        group.save()
         return SavedSuccessfully()
 
     def put(self, request, id):
@@ -75,8 +77,6 @@ class OneUserLimitsGroup(APIView):
 
     def delete(self, request, id):
         return self.change(request, id, "delete")
-
-
 
 class UserLimitsGroups(APIView):
     permission_classes = [IsDoctor]
@@ -106,11 +106,12 @@ class UserLimitsGroups(APIView):
         except LimitsGroup.DoesNotExist:
             pass
         group = LimitsGroup(patient=patient, doctor=request.user)
+        group.receive_notification = bool(body.get("receive_notification"))
         group.save()
         try:
             if not len(body):
                 return BadRequestException("Specify at least one metric's limits")
-            for limit_data in body:
+            for limit_data in body.get("limits"):
                 metric_name = limit_data.get("metric")
                 if metric_name:
                     try:

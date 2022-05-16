@@ -57,10 +57,10 @@ export const MyTabs = () => {
         }
         return (
             <>
-                <Tab.Screen name="Login" options={options}>
+                <Tab.Screen name="Login" options={{ ...options, headerShown: false, }}>
                     {(props) => <LoginRegisterScreen page={"login"} {...props} />}
                 </Tab.Screen>
-                <Tab.Screen name="Register" options={options}>
+                <Tab.Screen name="Register" options={{ ...options, headerShown: false, }}>
                     {(props) => <LoginRegisterScreen page={"register"} {...props} />}
                 </Tab.Screen>
             </>

@@ -77,12 +77,11 @@ class OneUserMetrics(APIView):
                 user_metric = UserMetricSerializer(user_metric, data=user_metric_data)
                 if user_metric.is_valid():
                     user_metric = user_metric.save()
-                    return SavedSuccessfully()
                 else:
                     return SerializerErrors(user_metric)
         except Exception:
             return BadRequestException("Invalid body")
-
+        return SavedSuccessfully()
 
 class OneUserMetricsStats(APIView):
     permission_classes = [permissions.IsAuthenticated]

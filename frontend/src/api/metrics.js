@@ -17,6 +17,15 @@ export const getUserMetrics = async ({ id, last=false }) => {
     });
 }
 
+export const getAllMetrics = async () => {
+    const headers = await buildAuthHeader();
+    const requestUrl = `metrics`;
+    return getRequest({
+        requestUrl,
+        headers,
+    });
+}
+
 export const getUserMetricsStats = async ({ id }) => {
     const headers = await buildAuthHeader();
     const requestUrl = `users/${id}/metrics/stats`;

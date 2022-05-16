@@ -7,6 +7,7 @@ import { PersonAvatar } from '../Global/PersonAvatar'
 import Tabs from '../Global/Tabs'
 import { Notes } from '../Notes/Notes'
 import { BasicInfo } from './BasicInfo'
+import { Limits } from './Limits'
 import { MetricsAnalytics } from './MetricsAnalytics'
 import { MetricsStats } from './MetricsStats'
 
@@ -24,6 +25,7 @@ export const PatientProfile = ({ navigation: { navigate } }) => {
             </View>
         ),
         'Notes': <Notes id={id} />,
+        'Limits': <Limits patient_id={id} />
     }
     return (
         <>

@@ -7,4 +7,6 @@ export const queriesKeys = {
     getQuotes: `quotes/get`,
     getPatients: 'patients/get',
     getPatientNotes: 'patients/one/notes/get',
+    getUserLimits: `limits/get`,
+    getAllMetrics: 'metrics/get',
 }

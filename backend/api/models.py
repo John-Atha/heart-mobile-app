@@ -77,7 +77,8 @@ class LimitsGroup(models.Model):
     doctor = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, related_name='doctor_limits_groups')
     patient = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, related_name='patient_limits_groups')    
     date = models.DateTimeField(default=datetime.today, null=False, blank=False)
-
+    receive_notification = models.BooleanField(default=False, null=False, blank=False)
+    
     class Meta:
         unique_together = ['doctor', 'patient']
 

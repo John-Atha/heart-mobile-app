@@ -19,7 +19,15 @@ export const LoginRegisterScreen = ({ navigation: { navigate }, ...props }) => {
     return (
         <Layout>
             <Surface style={styles.surface}>
-                <Image source={require('./logo_heart.png')} style={{ height: 100, width: 160, marginHorizontal: "auto", marginVertical: 16 }} />
+                <Image
+                    source={require('./logo_heart.png')}
+                    style={{
+                        height: 100,
+                        width: 160,
+                        marginHorizontal: "auto",
+                        marginVertical: 16
+                    }}
+                />
                 {/* <Headline style={styles.title}>
                     {title}
                 </Headline> */}

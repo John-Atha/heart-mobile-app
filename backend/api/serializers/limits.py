@@ -26,6 +26,7 @@ class LimitsGroupSerializer(serializers.ModelSerializer):
             'doctor',
             'limits',
             'date',
+            'receive_notification',
         ]
 
 
