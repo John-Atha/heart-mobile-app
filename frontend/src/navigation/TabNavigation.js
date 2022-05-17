@@ -15,6 +15,7 @@ import { DoctorsNavigator } from "./DoctorsNavigation";
 import { LogoTitle } from "./Header";
 import { PatientMetrics } from "../screens/PatientMetrics";
 import { PatientsNavigation } from "./PatientsNavigation";
+import { DoctorDashboard } from "../screens/DoctorDashboard";
 
 const Tab = createBottomTabNavigator();
 
@@ -49,6 +50,7 @@ export const MyTabs = () => {
             }
             return (
                 <>
+                    <Tab.Screen name="Home" component={DoctorDashboard} options={{ ...options, unmountOnBlur: true}} />
                     <Tab.Screen name="Chat" component={ChatNavigator} options={{ ...options, unmountOnBlur: true}} />
                     <Tab.Screen name="Patients" component={PatientsNavigation} options={{ ...options, unmountOnBlur: true}} />
                     <Tab.Screen name="Account" component={AccountScreen} options={{ ...options, unmountOnBlur: true}} />

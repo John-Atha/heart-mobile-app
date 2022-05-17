@@ -14,6 +14,7 @@ import { MetricsStats } from './MetricsStats'
 export const PatientProfile = ({ navigation: { navigate } }) => {
     const { selectedPatient } = useSelector(selectPatient);
     const { id, firstName, lastName } = selectedPatient;
+    console.log({ navigate });
     const tabs = {
         'Info': <BasicInfo navigate={navigate} />,
         'History': (
@@ -21,7 +22,7 @@ export const PatientProfile = ({ navigation: { navigate } }) => {
                 {/* <Headline style={{ textAlign: "center" }}>Statistics</Headline> */}
                 <MetricsStats id={id} />
                 {/* <Headline style={{ textAlign: "center" }}>Analytics</Headline> */}
-                <MetricsAnalytics id={id} />
+                <MetricsAnalytics id={id} navigate={navigate} />
             </View>
         ),
         'Notes': <Notes id={id} />,

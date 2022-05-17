@@ -11,6 +11,7 @@ export const UserCard = ({
     goToProfile,
     firstName,
     lastName,
+    badge,
     subtitle,
     navigate,
 }) => {
@@ -41,7 +42,7 @@ export const UserCard = ({
             <View>
                 <Grid>
                     <Row>
-                        <Col size={20}>
+                        <Col size={15}>
                             <PersonAvatar
                                 firstName={firstName}
                                 lastName={lastName}
@@ -49,11 +50,14 @@ export const UserCard = ({
                                 styles={styles.avatar}
                             />
                         </Col>
-                        <Col size={80}>
+                        <Col size={50}>
                             <Subheading>{lastName} {firstName}</Subheading>
                             {subtitle &&
                                 <Text>{subtitle}</Text>
                             }
+                        </Col>
+                        <Col size={30}>
+                            {badge}
                         </Col>
                     </Row>
                 </Grid>

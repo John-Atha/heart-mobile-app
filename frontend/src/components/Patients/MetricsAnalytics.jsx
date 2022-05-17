@@ -7,7 +7,7 @@ import { queriesKeys } from '../../api/queriesKeys';
 import { Spinner } from '../Global/Spinner';
 import { MetricsGroupAccordion } from './MetricsGroupAccordion';
 
-export const MetricsAnalytics = ({ id }) => {
+export const MetricsAnalytics = ({ id, navigate }) => {
 
     const { data, isLoading } = useQuery(
         [queriesKeys['getLastMetrics'], id],
@@ -31,15 +31,19 @@ export const MetricsAnalytics = ({ id }) => {
             </View>
         )
     }
+
+    console.log({ navigate });
     
     return (
         <View style={{ margin: 8 }}>
-            {data.map(({ id, datetime, metrics }) => (
+            {data.map(({ id, datetime, metrics, danger }) => (
                 <Surface style={{ marginTop: 8 }}>
                     <MetricsGroupAccordion
                         key={id}
                         datetime={datetime}
                         metrics={metrics}
+                        danger={danger}
+                        navigate={navigate}
                     />
                 </Surface>
             ))}

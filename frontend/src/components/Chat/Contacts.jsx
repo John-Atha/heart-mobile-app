@@ -59,7 +59,15 @@ export const Contacts = ({ navigate }) => {
 const Contact = ({ contact, text, seen, datetime, sent, navigate }) => {
     const dispatch = useDispatch();
 
-    const { username, first_name: firstName, last_name: lastName, id, doctor_info, patient_info } = contact || {};
+    const {
+        username,
+        first_name: firstName,
+        last_name: lastName,
+        id,
+        doctor_info,
+        patient_info,
+        danger
+    } = contact || {};
 
     console.log({ username, firstName, lastName, id, text, seen, datetime });
 
@@ -74,7 +82,7 @@ const Contact = ({ contact, text, seen, datetime, sent, navigate }) => {
 
     const selectDoc = () => {
         console.log("pressing", id);
-        dispatch(setContact({ firstName, lastName, ...contact }));
+        dispatch(setContact({ firstName, lastName, doctor_info, patient_info, ...contact }));
         setTimeout(() => {
             navigate("ChatContact")
         }, 200)

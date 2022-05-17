@@ -1,5 +1,6 @@
 import React from 'react'
-import { useTheme } from 'react-native-paper'
+import { StyleSheet } from 'react-native';
+import { Chip, useTheme } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
 import { genderToStr } from '../../helpers/genderToStr';
 import { setPatient } from '../../redux/slices/patientSlice';
@@ -12,7 +13,19 @@ export const PatientCard = ({
     username,
     patient_info,
     navigate,
+    danger,
 }) => {
+    const theme = useTheme();
+    const styles = StyleSheet.create({
+        chip: {
+            borderColor: theme.colors.error,
+        },
+        chipText: {
+            color: theme.colors.error,
+            textAlign: 'center',
+            // backgroundColor: theme.colors.error,
+        }
+    })
     const dispatch = useDispatch();
 
     const goToProfile = () => {
@@ -22,6 +35,7 @@ export const PatientCard = ({
             id,
             username,
             patient_info,
+            danger,
         }));
     }
 
@@ -38,6 +52,24 @@ export const PatientCard = ({
         return'';
     }
 
+    const getBadge = () => {
+        if (Object.keys(danger || {}).length) {
+            const metricsNum = danger['in_danger_metrics']?.length || 0;
+            if (metricsNum) {
+                return (
+                    <Chip mode='outlined'
+                        style={styles.chip}
+                        textStyle={styles.chipText}
+                    >
+                        {`${metricsNum} limits\nexceeded`}
+                    </Chip>
+                )
+            }
+            return null;
+        }
+        return null;
+    }
+
     return (
         <UserCard
             contact={{
@@ -46,7 +78,9 @@ export const PatientCard = ({
                 username,
                 id,
                 patient_info,
+                danger,
             }}
+            badge={getBadge()}
             goToProfile={goToProfile}
             firstName={firstName}
             lastName={lastName}

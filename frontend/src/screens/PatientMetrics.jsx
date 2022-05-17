@@ -9,7 +9,7 @@ import { selectAuth } from '../redux/slices/authSlice';
 import Tabs from '../components/Global/Tabs';
 import { Col, Grid, Row } from 'react-native-paper-grid';
 
-export const PatientMetrics = () => {
+export const PatientMetrics = ({ navigation: { navigate } }) => {
     const theme = useTheme();
     const [page, setPage] = useState("Statistics");
 
@@ -37,7 +37,7 @@ export const PatientMetrics = () => {
             <Tabs
                 views={{
                     "Statistics": <MetricsStats id={id} />,
-                    "Analytics": <MetricsAnalytics id={id} />,
+                    "Analytics": <MetricsAnalytics id={id} navigate={navigate} />,
                 }}
             />
         </Layout>

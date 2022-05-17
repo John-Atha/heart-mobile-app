@@ -21,3 +21,12 @@ export const getPatientsCall = async (id) => {
         headers,
     });
 }
+
+export const getDoctorSummary = async () => {
+    const requestUrl = `doctors/summary`;
+    const headers = await buildAuthHeader();
+    return getRequest({
+        requestUrl,
+        headers,
+    });
+}

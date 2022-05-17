@@ -1,9 +1,9 @@
 import React from 'react'
-import { DataTable } from 'react-native-paper'
+import { StyleSheet } from 'react-native';
+import { DataTable, useTheme } from 'react-native-paper'
 
-export const MetricsTable = ({ metrics }) => {
-
-    console.log({ metrics });
+export const MetricsTable = ({ metrics, in_danger_metrics }) => {
+    const theme = useTheme();
 
     return (
         <DataTable>
@@ -13,10 +13,25 @@ export const MetricsTable = ({ metrics }) => {
             </DataTable.Header>
 
             {metrics.map(({ metric, name, value }) => {
+                const name_ = metric?.name || name;
+                const in_danger = in_danger_metrics?.includes(name_);
                 return (
                     <DataTable.Row>
-                        <DataTable.Cell>{metric?.name || name}</DataTable.Cell>
-                        <DataTable.Cell numeric>{ value || "Unknown" }</DataTable.Cell>
+                        <DataTable.Cell
+                            textStyle={{
+                                ...(in_danger && { color: theme.colors.error } )
+                            }}
+                        >
+                            {metric?.name || name}
+                        </DataTable.Cell>
+                        <DataTable.Cell
+                            textStyle={{
+                                ...(in_danger && { color: theme.colors.error } )
+                            }}
+                            numeric
+                        >
+                            { value || "Unknown" }
+                        </DataTable.Cell>
                     </DataTable.Row>
                 )
             })}
