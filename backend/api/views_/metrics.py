@@ -2,6 +2,7 @@ from collections import defaultdict
 from datetime import datetime
 from email.policy import default
 import json
+from multiprocessing import context
 from statistics import mean
 from rest_framework.views import APIView
 from rest_framework import permissions
@@ -41,11 +42,20 @@ class OneUserMetrics(APIView):
         last_group = request.GET.get("last")
         if last_group:
             group = user.metrics_groups.last()
-            data = UserMetricsGroupSerializer(group).data
+            data = UserMetricsGroupSerializer(
+                group,
+                context={'request_user': request.user}
+            ).data
             data["open"] = is_form_open(user)
             return OK(data)
         groups = user.metrics_groups.order_by('-datetime')
-        return OK(UserMetricsGroupSerializer(groups, many=True).data)
+        return OK(
+            UserMetricsGroupSerializer(
+                groups,
+                many=True,
+                context={'request_user': request.user}
+            ).data
+        )
     
     def post(self, request, id):
         # authorize

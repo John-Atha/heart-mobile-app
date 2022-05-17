@@ -28,4 +28,5 @@ urlpatterns = [
     path('messages/seen', MessagesSeen.as_view(), name='MarkMessagesAsSeen'),
     path('quotes', Quotes.as_view(), name='Quotes'),
     path('doctors/<int:id>/patients', DoctorPatients.as_view(), name='DoctorPatients'),
+    path('doctors/summary', DoctorSummary.as_view(), name="DoctorSummary"),
 ]
