@@ -32,6 +32,41 @@ export const Limits = ({ patient_id }) => {
     const [receiveNotification, setReceiveNotification] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [isCreate, setIsCreate] = useState(false);
+    const [errors, setErrors] = useState(null);
+
+    const myIsNan = (number) => {
+        return isNaN(parseFloat(number));
+    }
+
+    const getErrors = ({ metric }) => {
+        const limit = limits.find(( { metric: currMetric }) => currMetric===metric);
+        const { lower_limit, upper_limit } = limit;
+        const OK = {
+            error: false,
+            helperText: "",
+        };
+        if (lower_limit==='' && upper_limit==='') {
+            return OK;
+        }
+        if (myIsNan(lower_limit) ||
+            myIsNan(upper_limit) ||
+            parseFloat(lower_limit)>parseFloat(upper_limit)
+        ) {
+            return ({
+                error: true,
+                helperText: "Lower limit must not exceed the upper limit",
+            })
+        }
+        return OK;
+    }
+
+    useEffect(() => {
+        const temp = {};
+        limits.forEach(({ metric }) => {
+            temp[metric] = getErrors({ metric });
+        });
+        setErrors(temp);
+    }, [limits])
 
     useEffect(() => {
         if (data || metrics) {
@@ -53,7 +88,7 @@ export const Limits = ({ patient_id }) => {
                 const newLimits = metrics
                     .map(({ name }) => name)
                     .filter((name) => !existingNames.includes(name))
-                    .map((name) => ({ metric: name, lower_limit: 0, upper_limit: 0 }));
+                    .map((name) => ({ metric: name, lower_limit: '', upper_limit: '' }));
                     limits_ = limits_.concat(newLimits);
                 console.log({ existingNames, newLimits });
             } 
@@ -72,11 +107,23 @@ export const Limits = ({ patient_id }) => {
     }
 
     const submit = () => {
+        console.log({ limits });
+        console.log({ errors });
+        const errorsMsgs = Object.values(errors)
+            .filter(({ error }) => error)
+            .map(({ helperText }) => helperText);
+        console.log({ errorsMsgs });
+        if (errorsMsgs.length) {
+            dispatch(setSnackMessage({
+                text: errorsMsgs[0],
+                severity: 'warning',
+            }));
+            return;
+        }
         const body = {
-            limits,
+            limits: limits.filter(({ upper_limit, lower_limit }) => (!!upper_limit && !!lower_limit)),
             receive_notification: receiveNotification,
         };
-        console.log({ patient_id, groupId });
         let method = postUserLimits;
         let id = patient_id;
         if (isEdit) {
@@ -97,8 +144,9 @@ export const Limits = ({ patient_id }) => {
             console.log(err);
             console.log(err.response);
             let text = "Sorry, we could not update the limits";
-            if (err.response.status===400) {
-                text = err.response.data;
+            if (err.response?.status===400) {
+                if (typeof (err.response.data) === 'string')
+                    text = err.response.data;
             }
             dispatch(setSnackMessage({
                 text,
@@ -132,6 +180,7 @@ export const Limits = ({ patient_id }) => {
                     limits={limits}
                     setLimits={setLimits}
                     onSubmit={submit}
+                    errors={errors}
                 />
             )
         }

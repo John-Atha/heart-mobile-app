@@ -14,6 +14,7 @@ const styles = StyleSheet.create({
 export const LimitsForm = ({
     limits,
     setLimits,
+    errors,
 }) => {
 
     const handleChange = ({ metric, isLower, value }) => {
@@ -30,25 +31,6 @@ export const LimitsForm = ({
         setLimits(limitsNew);
     }
 
-    const myIsNan = (number) => {
-        return isNaN(parseFloat(number));
-    }
-
-    const getErrors = ({ metric }) => {
-        const limit = limits.find(( { metric: currMetric }) => currMetric===metric);
-        const { lower_limit, upper_limit } = limit;
-        if (lower_limit>upper_limit || myIsNan(lower_limit) || myIsNan(upper_limit)) {
-            return ({
-                error: true,
-                helperText: "Lower limit must not exceed the upper limit",
-            })
-        }
-        return ({
-            error: false,
-            helperText: "",
-        })
-    }
-
     return (
         <DataTable>
             <DataTable.Header>
@@ -58,7 +40,7 @@ export const LimitsForm = ({
             </DataTable.Header>
 
             {limits.map(({ metric, lower_limit, upper_limit }) => {
-                const { error, helperText } = getErrors({ metric });
+                const { error, helperText } = errors[metric];
                 return (
                     <DataTable.Row>
                         {/* <View> */}
