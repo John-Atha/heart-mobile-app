@@ -13,7 +13,7 @@ export const OneQuote = ({ text }) => {
         }}>
             <Text style={{
                 margin: "auto",
-                fontSize: 17,
+                fontSize: theme.defaultFontSize,
                 textAlign: "center",
                 fontStyle: "italic",
             }}>

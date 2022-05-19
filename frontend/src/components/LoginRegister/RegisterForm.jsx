@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Field, Form, Formik } from 'formik'
 import React, { useState } from 'react'
 import { StyleSheet } from 'react-native'
-import { Button, Checkbox, RadioButton, TextInput } from 'react-native-paper'
+import { Button, Checkbox, RadioButton, TextInput, useTheme } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
 import { registerCall } from '../../api/auth'
 import { users } from '../../data/users'
@@ -13,6 +13,7 @@ import { setSnackMessage } from '../../redux/slices/snackMessageSlice'
 
 export const RegisterForm = ({ navigate, goToLogin }) => {
     const dispatch = useDispatch();
+    const theme = useTheme();
     const [isDoctor, setIsDoctor] = useState(false);
 
     const initialValues = {
@@ -148,11 +149,23 @@ export const RegisterForm = ({ navigate, goToLogin }) => {
                     <Button
                         mode="contained"
                         style={styles.button}
+                        labelStyle={{
+                            textTransform: "none",
+                            fontSize: theme.defaultFontSize,
+                        }}
                         onPress={handleSubmit}
                     >
                         Register
                     </Button>
-                    <Button mode="text" onPress={goToLogin} style={styles.link}>
+                    <Button
+                        mode="text"
+                        onPress={goToLogin}
+                        style={styles.link}
+                        labelStyle={{
+                            textTransform: "none",
+                            fontSize: theme.defaultFontSize,
+                        }}
+                    >
                         I already have an account
                     </Button>
                 </Form>

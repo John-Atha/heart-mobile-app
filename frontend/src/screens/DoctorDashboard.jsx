@@ -67,7 +67,13 @@ export const DoctorDashboard = ({ navigation: { navigate } }) => {
                             </Col>
                             <Col>
                                 <SimpleCard
-                                    title={notifications?.length || 0}
+                                    title={
+                                        notifications
+                                            ?.filter(({ danger }) =>
+                                                !!danger?.in_danger
+                                            )?.length
+                                        || 0
+                                    }
                                     subtitle="Notifications"    
                                 />
                             </Col>
@@ -92,37 +98,44 @@ export const DoctorDashboard = ({ navigation: { navigate } }) => {
                         }
                     ]}
                 />
-                <Headline style={{ margin: 4 }}>
-                    Notifications
-                </Headline>
-                {notifications.map(({ first_name, last_name, id, danger, ...notification }) => {
-                    const num = danger?.in_danger_metrics?.length || 0;
-                    if (num) {
-                        return (
-                            <Surface style={{
-                                padding: 8,
-                                margin: 4,
-                                borderRadius: theme.roundness,
-                            }}>
-                                <Text
-                                    component={Button}
-                                    style={{
-                                        fontSize: 17,
-                                    }}
-                                    onPress={()=>goToProfile({
-                                        firstName: first_name,
-                                        lastName: last_name,
-                                        id,
-                                        danger,
-                                        ...notification,
-                                    })}
-                                >
-                                    {last_name} {first_name} has exceeded {num} {num===1 ? 'limit' : 'limits'} that you have set for him
-                                </Text>
-                            </Surface>
-                        )
-                    }
-                })}
+                {!!notifications
+                    ?.filter(({ danger }) =>
+                        !!danger?.in_danger
+                    )?.length &&
+                    <>
+                        <Headline style={{ margin: 4 }}>
+                            Notifications
+                        </Headline>
+                        {notifications.map(({ first_name, last_name, id, danger, ...notification }) => {
+                            const num = danger?.in_danger_metrics?.length || 0;
+                            if (num) {
+                                return (
+                                    <Surface style={{
+                                        padding: 8,
+                                        margin: 4,
+                                        borderRadius: theme.roundness,
+                                    }}>
+                                        <Text
+                                            component={Button}
+                                            style={{
+                                                fontSize: 17,
+                                            }}
+                                            onPress={()=>goToProfile({
+                                                firstName: first_name,
+                                                lastName: last_name,
+                                                id,
+                                                danger,
+                                                ...notification,
+                                            })}
+                                        >
+                                            {last_name} {first_name} has exceeded {num} {num===1 ? 'limit' : 'limits'} that you have set for him
+                                        </Text>
+                                    </Surface>
+                                )
+                            }
+                        })}
+                    </>
+                }
             </>
         )
     }

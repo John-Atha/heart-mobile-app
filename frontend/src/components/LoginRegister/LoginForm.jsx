@@ -107,7 +107,10 @@ export const LoginForm = ({ navigate, goToRegister }) => {
                         mode="text"
                         onPress={goToRegister}
                         style={styles.link}
-                        labelStyle={{ textTransform: "none", }}
+                        labelStyle={{
+                            textTransform: "none",
+                            fontSize: theme.defaultFontSize,
+                        }}
                     >
                         First time here?
                     </Button>
