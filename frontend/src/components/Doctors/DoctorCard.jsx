@@ -1,11 +1,9 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
-import { Avatar, Button, Subheading, Surface, useTheme } from 'react-native-paper'
-import { Col, Grid, Row } from 'react-native-paper-grid'
+import { StyleSheet } from 'react-native'
+import { useTheme } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
-import { setContact } from '../../redux/slices/chatSlice'
 import { setDoctor } from '../../redux/slices/doctorSlice'
-import { PersonAvatar } from '../Global/PersonAvatar'
+import { UserCard } from '../UserCard'
 
 export const DoctorCard = ({
     id,
@@ -15,34 +13,7 @@ export const DoctorCard = ({
     doctor_info,
     navigate,
 }) => {
-
-    const theme = useTheme();
-
-    const styles = StyleSheet.create({
-        surface: {
-            padding: "4px",
-            margin: "8px",
-            elevation: theme.elevation,
-            borderRadius: theme.roundness,
-        },
-        avatar: {
-            margin: "auto",
-        }
-    })
-
-    const { expertise, description } = doctor_info || {};
     const dispatch = useDispatch();
-
-    const startChat = () => {
-        dispatch(setContact({
-            firstName,
-            lastName,
-            username,
-            id,
-            doctor_info,
-        }));
-        navigate("Chat");
-    }
 
     const goToProfile = () => {
         dispatch(setDoctor({
@@ -51,50 +22,23 @@ export const DoctorCard = ({
             id,
             username,
             doctor_info,
-        }))
+        }));
     }
 
     return (
-        <Surface style={styles.surface}>
-            <View>
-                <Grid>
-                    <Row>
-                        <Col size={20}>
-                            <PersonAvatar firstName={firstName} lastName={lastName} size={40} styles={styles.avatar} />
-                        </Col>
-                        <Col size={80}>
-                            <Subheading>{lastName} {firstName}</Subheading>
-                            {expertise &&
-                                <Text>{expertise}</Text>
-                            }
-                        </Col>
-                    </Row>
-                </Grid>
-            </View>
-            <View>
-                <Grid>
-                    <Row>
-                        <Col>
-                            <Button
-                                mode="contained"
-                                icon={"send"}
-                                onPress={startChat}
-                            >
-                                Chat
-                            </Button>
-                        </Col>
-                        <Col>
-                            <Button
-                                mode="outlined"
-                                icon={"account"}
-                                onPress={goToProfile}
-                            >
-                                Profile
-                            </Button>
-                        </Col>
-                    </Row>
-                </Grid>
-            </View>
-        </Surface>
+        <UserCard
+            contact={{
+                firstName,
+                lastName,
+                username,
+                id,
+                doctor_info,
+            }}
+            goToProfile={goToProfile}
+            firstName={firstName}
+            lastName={lastName}
+            subtitle={doctor_info?.expertise}
+            navigate={navigate}
+        />
     )
 }

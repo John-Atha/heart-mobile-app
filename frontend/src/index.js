@@ -17,6 +17,7 @@ const theme = {
     primary: "green",
   },
   elevation: 3,
+  defaultFontSize: 17,
 }
 
 const queryClient = new QueryClient();

@@ -23,7 +23,6 @@ export const LoginForm = ({ navigate, goToRegister }) => {
             margin: "auto",
         },
         link: {
-            textTransform: "none",
             marginTop: "16px",
         },
     })
@@ -104,7 +103,15 @@ export const LoginForm = ({ navigate, goToRegister }) => {
                     >
                         Login
                     </Button>
-                    <Button mode="text" onPress={goToRegister} style={styles.link}>
+                    <Button
+                        mode="text"
+                        onPress={goToRegister}
+                        style={styles.link}
+                        labelStyle={{
+                            textTransform: "none",
+                            fontSize: theme.defaultFontSize,
+                        }}
+                    >
                         First time here?
                     </Button>
                 </Form>

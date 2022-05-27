@@ -1,11 +1,13 @@
 from rest_framework import serializers
 from api.models import *
 
-class DiseaseSerializer(serializers.ModelSerializer):
+class TagSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Disease
+        model = Tag
         fields = [
             'id',
             'name',
-            'description',
+            'doctor',
+            'patient',
+            'is_disease',
         ]

@@ -1,16 +1,26 @@
 import React from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Text } from 'react-native'
 import { Subheading, Surface } from 'react-native-paper'
 import { Line } from '../Charts/LineChart'
 
 
 export const StatisticsCard = ({ title, data, labels, suffix }) => {
+    let content = (
+        <Text style={{ textAlign: "center" }}>
+            No records found
+        </Text>
+    );
+    if (data?.length) {
+        content = (
+            <Line data={data} labels={labels} suffix={suffix} />
+        );
+    }
     return (
         <Surface style={styles.surface}>
             <Subheading style={styles.head}>
                 {title}
             </Subheading>
-            <Line data={data} labels={labels} suffix={suffix} />
+            {content}
         </Surface>
     )
 }

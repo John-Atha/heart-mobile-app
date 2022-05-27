@@ -8,14 +8,14 @@ import { checkLogged, selectAuth } from "../redux/slices/authSlice";
 import { AccountScreen } from "../screens/AccountScreen";
 import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { DiseasesScreen } from "../screens/DiseasesScreen";
 import { selectPatient } from "../redux/slices/patientSlice";
-import { PatientProfileScreen } from "../screens/PatientProfileScreen";
 import { Caption } from "react-native-paper";
 import { ChatNavigator } from "./ChatNavigation";
-import { selectChatContact } from "../redux/slices/chatSlice";
 import { DoctorsNavigator } from "./DoctorsNavigation";
 import { LogoTitle } from "./Header";
+import { PatientMetrics } from "../screens/PatientMetrics";
+import { PatientsNavigation } from "./PatientsNavigation";
+import { DoctorDashboard } from "../screens/DoctorDashboard";
 
 const Tab = createBottomTabNavigator();
 
@@ -42,31 +42,27 @@ export const MyTabs = () => {
                         <Tab.Screen name="Home" component={HomeScreen} options={{ ...options, unmountOnBlur: true}} />
                         <Tab.Screen name="Chat" component={ChatNavigator} options={{ ...options, unmountOnBlur: true}} />
                         <Tab.Screen name="Doctors" component={DoctorsNavigator} options={{ ...options, unmountOnBlur: true}} />
-                        { selectedPatient &&
-                            <Tab.Screen name="Patient" component={PatientProfileScreen} options={{ ...options, unmountOnBlur: true}} />
-                        }
-                        <Tab.Screen name="Diseases" component={DiseasesScreen} options={{ ...options, unmountOnBlur: true}} />
+                        {/* <Tab.Screen name="Diseases" component={DiseasesScreen} options={{ ...options, unmountOnBlur: true}} /> */}
+                        <Tab.Screen name="Metrics" component={PatientMetrics} options={{ ...options, unmountOnBlur: true}} />
                         <Tab.Screen name="Account" component={AccountScreen} options={{ ...options, unmountOnBlur: true}} />
                     </>
                 )
             }
             return (
                 <>
+                    <Tab.Screen name="Home" component={DoctorDashboard} options={{ ...options, unmountOnBlur: true}} />
                     <Tab.Screen name="Chat" component={ChatNavigator} options={{ ...options, unmountOnBlur: true}} />
-                    { selectedPatient &&
-                        <Tab.Screen name="Patient" component={PatientProfileScreen} options={{ ...options, unmountOnBlur: true}} />
-                    }
-                    {/* <Tab.Screen name="Chat" component={ChatNavigator} options={{ ...options, unmountOnBlur: true}} /> */}
+                    <Tab.Screen name="Patients" component={PatientsNavigation} options={{ ...options, unmountOnBlur: true}} />
                     <Tab.Screen name="Account" component={AccountScreen} options={{ ...options, unmountOnBlur: true}} />
                 </>
             )
         }
         return (
             <>
-                <Tab.Screen name="Login" options={options}>
+                <Tab.Screen name="Login" options={{ ...options, headerShown: false, }}>
                     {(props) => <LoginRegisterScreen page={"login"} {...props} />}
                 </Tab.Screen>
-                <Tab.Screen name="Register" options={options}>
+                <Tab.Screen name="Register" options={{ ...options, headerShown: false, }}>
                     {(props) => <LoginRegisterScreen page={"register"} {...props} />}
                 </Tab.Screen>
             </>
@@ -107,6 +103,7 @@ const icons = {
     Account: "person",
     Chat: "send",
     Diseases: "medical",
-    Patient: "medical",
-    Doctors: "medkit"
+    Patients: "medical",
+    Doctors: "medkit",
+    Metrics: "stats-chart",
 }

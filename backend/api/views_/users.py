@@ -1,10 +1,11 @@
 import json
+from multiprocessing import context
 from api.serializers.users import DoctorInfoSerializer, PatientInfoSerializer, UserSerializer
 from rest_framework.views import APIView
 from rest_framework import permissions
 from rest_framework_simplejwt.tokens import RefreshToken
 from api.models import *
-from .helpers import OK, BadRequestException, Deleted, NotFoundException, SerializerErrors, UnAuthorizedException
+from .helpers import OK, BadRequestException, Deleted, IsDoctor, NotFoundException, SerializerErrors, UnAuthorizedException, is_patient_in_danger_by_doctor, list_to_object
 
 class Logged(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -117,3 +118,63 @@ class OneUser(APIView):
     
     def delete(self, request, id):
         return self.handle_update(request, id, "delete")
+
+def get_patients(doctor):
+    messages = doctor.received_messages.all()
+    patients = list(set([message.sender for message in messages]))
+    return patients
+
+class DoctorPatients(APIView):
+    permission_classes = [IsDoctor]
+
+    def get(self, request, id):
+        try:
+            doctor = User.objects.get(id=id)
+        except User.DoesNotExist:
+            return NotFoundException("Doctor", id)
+        # patients of a doctor are the users that have sent him/her a message
+        patients = get_patients(request.user)
+        patients = UserSerializer(
+            patients,
+            many=True,
+            context={
+                'compute_danger': True,
+                'request_user': request.user,
+            }
+        ).data
+        return OK(patients)
+
+class DoctorSummary(APIView):
+    permission_classes = [IsDoctor]
+
+
+    def get(self, request):
+        
+        def is_in_danger(patient):
+            return patient.get('danger') and patient.get('danger').get('in_danger')
+
+        def should_notify(patient):
+            print("DANGER::", patient.get('danger'))
+            return patient.get('danger') and patient.get('danger').get('receive_notification')
+
+        patients = get_patients(request.user)
+        patients = UserSerializer(
+            patients,
+            many=True,
+            context={
+                'compute_danger': True,
+                'request_user': request.user,
+            }
+        ).data
+        print(json.dumps(patients, indent=2))
+        total = len(patients)
+        in_danger = len(list(filter(is_in_danger, patients)))
+        unseen_messages = request.user.received_messages.filter(seen=False).count()
+        notifications = list(filter(should_notify, patients))
+
+        return OK({
+            "patients_total": total,
+            "patients_in_danger": in_danger,
+            "unseen_messages": unseen_messages,
+            "notifications": notifications,
+        })

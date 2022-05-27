@@ -1,4 +1,4 @@
-export const data = [
+export const dataa = [
     Math.random() * 100,
     Math.random() * 100,
     Math.random() * 100,
