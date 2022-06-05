@@ -1,8 +1,10 @@
 import json
+from api.serializers.users import UserSerializer
 from rest_framework.views import APIView
 from rest_framework import permissions
 from api.models import Limit, LimitsGroup, Metric, User
 from api.serializers.limits import LimitSerializer, LimitsGroupSerializer
+from api.serializers.metrics import MetricSerializer
 from api.views_.helpers import OK, BadRequestException, Deleted, IsDoctor, NotFoundException, SavedSuccessfully, SerializerErrors, UnAuthorizedException
 
 class OneUserLimitsGroup(APIView):
@@ -91,8 +93,20 @@ class UserLimitsGroups(APIView):
             group = user.patient_limits_groups.get(doctor=request.user)
             return OK(LimitsGroupSerializer(group, many=False).data)
         except LimitsGroup.DoesNotExist:
+            # metrics = Metric.objects.all()
+            # return OK({
+            #     "patient": UserSerializer(user).data,
+            #     "doctor": UserSerializer(request.user).data,
+            #     "limits": [
+            #         {
+            #             'metric': MetricSerializer(metric).data,
+            #             'lower_limit': "",
+            #             'upper_limit': "",
+            #         }
+            #         for metric in metrics
+            #     ]
+            # })
             return NotFoundException(f"Limits group for patient '{user.id}' and doctor", request.user.id)
-
 
     def post(self, request, id):
         try:

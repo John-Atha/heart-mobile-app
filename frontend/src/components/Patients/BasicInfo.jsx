@@ -58,17 +58,19 @@ export const BasicInfo = ({ navigate }) => {
                     </Button>
                 </Card.Content>
             </Card>
-            <Surface style={{
-                padding: 8,
-                margin: 8,
-            }}>
-                <Text style={{
-                    color: theme.colors.error,
-                    fontSize: 17,
+            {selectedPatient?.danger?.in_danger &&
+                <Surface style={{
+                    padding: 8,
+                    margin: 8,
                 }}>
-                    The patient has some metrics exceeding the limits that you have set for him.
-                </Text>
-            </Surface>
+                    <Text style={{
+                        color: theme.colors.error,
+                        fontSize: 17,
+                    }}>
+                        The patient has some metrics exceeding the limits that you have set for him.
+                    </Text>
+                </Surface>
+            }
         </ScrollView>
     )
 

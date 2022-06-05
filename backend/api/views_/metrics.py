@@ -20,6 +20,8 @@ class Metrics(APIView):
     
 def is_form_open(user: User):
     group = user.metrics_groups.last()
+    if not group:
+        return True
     try:
         days = Config.objects.get(name='submissions_interval')
     except Config.DoesNotExist:

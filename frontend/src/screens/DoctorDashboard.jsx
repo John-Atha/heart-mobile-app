@@ -83,8 +83,8 @@ export const DoctorDashboard = ({ navigation: { navigate } }) => {
                 <Pie
                     data={[
                         {
-                            name: "patients in total",
-                            value: patientsTotal,
+                            name: "healthy patients",
+                            value: patientsTotal-patientsInDanger,
                             color: theme.colors.primary,
                             legendFontColor: theme.colors.primary,
                             legendFontSize: 15
@@ -92,8 +92,8 @@ export const DoctorDashboard = ({ navigation: { navigate } }) => {
                         {
                             name: "out of limits",
                             value: patientsInDanger,
-                            color: '#c9c95f',
-                            legendFontColor: '#c9c95f',
+                            color: "#948926",
+                            legendFontColor: "#948926",
                             legendFontSize: 15
                         }
                     ]}
