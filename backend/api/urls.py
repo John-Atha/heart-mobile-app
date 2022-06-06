@@ -1,7 +1,7 @@
 from django.urls import path
 from api.views_.messages import Messages, MessagesSeen, MessagesSummary
 from api.views_.users import *
-from api.views_.metrics import Metrics, OneUserMetrics, OneUserMetricsStats
+from api.views_.metrics import Metrics, OneUserAverageMetrics, OneUserMetrics, OneUserMetricsStats
 from api.views_.quotes import Quotes
 from api.views_.notes import OneNote, PatientNotes
 from api.views_.limits import OneUserLimitsGroup, UserLimitsGroups
@@ -18,6 +18,7 @@ urlpatterns = [
     path('users', Users.as_view(), name='Users'),
     path('users/<int:id>', OneUser.as_view(), name='OneUser'),
     path('users/<int:id>/metrics', OneUserMetrics.as_view(), name='OneUserMetrics'),
+    path('users/<int:id>/metrics/average', OneUserAverageMetrics.as_view(), name='OneUserMetricsAvg'),
     path('users/<int:id>/metrics/stats', OneUserMetricsStats.as_view(), name='OneUserMetricsStats'),
     path('users/<int:id>/notes', PatientNotes.as_view(), name='OnePatientNotes'),
     path('users/<int:id>/limits', UserLimitsGroups.as_view(), name='OnePatientLimitsGroups'),

@@ -4,6 +4,7 @@ from email.policy import default
 import json
 from multiprocessing import context
 from statistics import mean
+from unittest import result
 from rest_framework.views import APIView
 from rest_framework import permissions
 from api.models import Config, Metric, User, UserMetric, UserMetricsGroup
@@ -125,5 +126,42 @@ class OneUserMetricsStats(APIView):
                 averages[date][metric] = mean(metrics[date][metric])
         return OK(averages)
 
-            
+class OneUserAverageMetrics(APIView):
+    permission_classes = [permissions.IsAuthenticated]
 
+    def get(self, request, id):
+        if (request.user.is_doctor):
+            return BadRequestException("Available only for simple patients")
+        try:
+            user = User.objects.get(id=id)
+        except User.DoesNotExist:
+            return UnAuthorizedException()
+        if request.user!=user:
+            return UnAuthorizedException()
+        
+        metrics_groups = user.metrics_groups.all()
+        print(metrics_groups)
+        
+        metrics = Metric.objects.all()
+        
+        records = defaultdict(list)
+
+        for group in metrics_groups:
+            metrics = group.metrics.all()
+            if metrics:
+                for metric_record in metrics:
+                    metric, value = metric_record.metric, metric_record.value
+                    name = metric.name
+                    records[name].append(float(value))
+        
+        results = { key: round(mean(values), 3) for [key, values] in records.items() }
+        info = user.patient_info
+        if info:
+            results['age'] = info.age
+            results['gender'] = info.gender
+            results['height'] = info.height
+            results['weight'] = info.weight
+
+            # to be filled
+
+        return OK(results)
