@@ -99,12 +99,12 @@ export const Messages = ({ contact, navigate }) => {
         if (!data?.length) {
             return (
                 <>
-                    <Subheading style={{ maxHeight: "inherit", textAlign: "center", paddingTop: 20 }}>
+                    <Text style={{ maxHeight: "inherit", fontSize: 20, textAlign: "center", paddingTop: 20, paddingHorizontal: 8 }}>
                         No messages found with this doctor.
-                    </Subheading>
-                    <Subheading style={{ maxHeight: "inherit", flex: 1, textAlign: "center", paddingTop: 5 }}>
+                    </Text>
+                    <Text style={{ maxHeight: "inherit", fontSize: 17, flex: 1, textAlign: "center", paddingTop: 15, paddingHorizontal: 8 }}>
                         By starting a conversation with the doctor, you are allowing him to view your health history.
-                    </Subheading>
+                    </Text>
                 </>
             )
         }

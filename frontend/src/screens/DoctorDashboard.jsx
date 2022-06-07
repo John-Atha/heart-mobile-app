@@ -128,7 +128,7 @@ export const DoctorDashboard = ({ navigation: { navigate } }) => {
                                                 ...notification,
                                             })}
                                         >
-                                            {last_name} {first_name} has exceeded {num} {num===1 ? 'limit' : 'limits'} that you have set for him
+                                            <u>{last_name} {first_name}</u> has exceeded {num} {num===1 ? 'limit' : 'limits'} that you have set for him
                                         </Text>
                                     </Surface>
                                 )

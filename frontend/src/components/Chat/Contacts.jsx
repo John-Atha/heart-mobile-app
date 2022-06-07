@@ -29,7 +29,7 @@ export const Contacts = ({ navigate }) => {
     if (!data?.length) {
         return (
             <Surface style={{ paddingVertical: 16, paddingHorizontal: 8, marginVertical: 16, marginHorizontal: 8 }}>
-                <Text style={{ textAlign: "center" }}>
+                <Text style={{ textAlign: "center", fontSize: 17 }}>
                     Sorry, your chat history is empty
                 </Text>
                 {!isDoctor &&
