@@ -40,3 +40,12 @@ export const postMetrics = async (id, data) => {
     const headers = await buildAuthHeader();
     return axios.post(requestUrl, data, { headers });
 }
+
+export const getAverages = async (id) => {
+    const headers = await buildAuthHeader();
+    const requestUrl = `users/${id}/metrics/average`;
+    return getRequest({
+        requestUrl,
+        headers,
+    });
+}

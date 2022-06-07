@@ -63,14 +63,14 @@ class Prediction(APIView):
                         "class":0
                       })
 
-        age = body['age'] if body.get('age') else 53
-        gender = body['gender'] if body.get('gender') else 1
-        height = body['height'] if body.get('height') else 1.65
-        weight = body['weight'] if body.get('weight') else 74
+        age = body.get('age') or 53
+        gender = body.get('gender') or 1
+        height = body.get('height') or 1.65
+        weight = body.get('weight') or 74
         ap_hi = body['systolic_pressure'] * 10 if body.get('systolic_pressure') else 129
         ap_lo = body['diastolic_pressure'] * 10 if body.get('diastolic_pressure') else 98
-        smoke = 1 if body.get('smoking') and body['smoking'] else 0
-        alco = 1 if body.get('drinking') and body['drinking'] else 0 
+        smoke = 1 if body.get('smoking') else 0
+        alco = 1 if body.get('drinking') else 0 
         if body.get('exercising'):
             if body['exercising']:
                 active = 1

@@ -7,7 +7,7 @@ from statistics import mean
 from unittest import result
 from rest_framework.views import APIView
 from rest_framework import permissions
-from api.models import Config, Metric, User, UserMetric, UserMetricsGroup
+from api.models import Config, Metric, PatientInfo, User, UserMetric, UserMetricsGroup
 from api.serializers.metrics import MetricSerializer
 from api.views_.helpers import OK, BadRequestException, NotFoundException, SavedSuccessfully, SerializerErrors, UnAuthorizedException
 from api.serializers.usermetrics import UserMetricSerializer, UserMetricsGroupSerializer
@@ -155,13 +155,14 @@ class OneUserAverageMetrics(APIView):
                     records[name].append(float(value))
         
         results = { key: round(mean(values), 3) for [key, values] in records.items() }
-        info = user.patient_info
+        info: PatientInfo = user.patient_info
         if info:
             results['age'] = info.age
             results['gender'] = info.gender
             results['height'] = info.height
             results['weight'] = info.weight
-
-            # to be filled
-
+            results['smoking'] = info.smoking
+            results['exercising'] = info.exercising
+            results['drinking'] = info.drinking
+            
         return OK(results)
