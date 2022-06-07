@@ -1,12 +1,10 @@
 import React from 'react'
-import { Dimensions, StyleSheet, View } from 'react-native';
-import Carousel from 'react-native-carousel-control';
+import { StyleSheet, View } from 'react-native';
 import { Headline, Subheading, Surface, useTheme } from 'react-native-paper'
 import { useSelector } from 'react-redux';
+import { Danger } from '../components/Home/Danger';
 import { Quotes } from '../components/Home/Quotes';
-import { StatisticsCard } from '../components/Home/StatisticsCard';
 import { MetricsForm } from '../components/Patients/MetricsForm';
-import { users } from '../data/users';
 import { selectAuth } from '../redux/slices/authSlice';
 import { Layout } from './Layout'
 
@@ -25,6 +23,9 @@ export const HomeScreen = ({ page, navigation: {navigate }, ...props }) => {
             <Surface style={{ marginTop: 20, padding: 5, borderRadius: theme.roundness }}>
                 <MetricsForm />
             </Surface>
+            <View style={{ marginTop: 10 }}>
+                <Danger />
+            </View>
             <View style={{ marginTop: 10 }}>
                 <Quotes />
             </View>

@@ -10,4 +10,5 @@ export const queriesKeys = {
     getUserLimits: `limits/get`,
     getAllMetrics: 'metrics/get',
     getDoctorSummary: 'doctors/summary/get',
+    getAverages: 'user/metrics/averages/get',
 }

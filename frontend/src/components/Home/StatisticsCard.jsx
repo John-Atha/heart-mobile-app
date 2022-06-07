@@ -6,7 +6,7 @@ import { Line } from '../Charts/LineChart'
 
 export const StatisticsCard = ({ title, data, labels, suffix }) => {
     let content = (
-        <Text style={{ textAlign: "center" }}>
+        <Text style={{ textAlign: "center", fontSize: 17 }}>
             No records found
         </Text>
     );
@@ -28,6 +28,8 @@ export const StatisticsCard = ({ title, data, labels, suffix }) => {
 const styles = StyleSheet.create({
     head: {
         textAlign: "center",
+        fontSize: 20,
+        marginVertical: 5
     },
     surface: {
         padding: "4px",

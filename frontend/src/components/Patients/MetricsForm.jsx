@@ -27,7 +27,10 @@ export const MetricsForm = () => {
         }
     );
     
-    const refresh = () => queryClient.invalidateQueries([queriesKeys['getLastMetrics'], id]);
+    const refresh = () => {
+        queryClient.invalidateQueries([queriesKeys['getLastMetrics'], id]);
+        queryClient.invalidateQueries([queriesKeys['getAverages'], id]);
+    }
 
     const submit = (values) => {
         if (!values.cholesterol &&
@@ -46,6 +49,12 @@ export const MetricsForm = () => {
             data.push({
                 metric: "Cholesterol",
                 value: parseFloat(values.cholesterol),
+            });
+        }
+        if (values.glucose) {
+            data.push({
+                metric: "Glucose",
+                value: parseFloat(values.glucose),
             });
         }
         if (values.systolic_pressure) {
@@ -86,7 +95,7 @@ export const MetricsForm = () => {
         
         const initialValues = {
             cholesterol: data?.cholesterol || "",
-            heart_rate: data?.heart_rate || "",
+            glucose: data?.glucose || "",
             systolic_pressure: data?.systolic_pressure || "",
             diastolic_pressure: data?.diastolic_pressure || "",
             open: data?.open || true,   
@@ -109,7 +118,7 @@ export const MetricsForm = () => {
                                             as={TextInput}
                                             keyboardType="number"
                                             mode="outlined"
-                                            label="Cholesterol"
+                                            label="Cholesterol (mg/dl)"
                                             name="cholesterol"
                                             onChangeText={handleChange("cholesterol")}
                                             onBlur={handleBlur("cholesterol")}
@@ -126,17 +135,17 @@ export const MetricsForm = () => {
                                             as={TextInput}
                                             keyboardType="number"
                                             mode="outlined"
-                                            label="Heart Rate (p/m)"
-                                            name="heart_rate"
-                                            onChangeText={handleChange("heart_rate")}
-                                            onBlur={handleBlur("heart_rate")}
-                                            error={errors["heart_rate"]}
-                                            value={values["heart_rate"]}
+                                            label="Glucose (mg/dl)"
+                                            name="glucose"
+                                            onChangeText={handleChange("glucose")}
+                                            onBlur={handleBlur("glucose")}
+                                            error={errors["glucose"]}
+                                            value={values["glucose"]}
                                             errors={errors}
                                             touched={touched}
                                             disabled={!data?.open}
                                         />
-                                        { renderHelperText({name: "heart_rate", errors, touched, msg: "Must be a positive number" }) }
+                                        { renderHelperText({name: "glucose", errors, touched, msg: "Must be a positive number" }) }
                                     </Col>
                                 </Row>
                                 <Row>
