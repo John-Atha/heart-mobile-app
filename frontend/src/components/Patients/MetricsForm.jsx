@@ -118,7 +118,7 @@ export const MetricsForm = () => {
                                             as={TextInput}
                                             keyboardType="number"
                                             mode="outlined"
-                                            label="Cholesterol"
+                                            label="Cholesterol (mg/dl)"
                                             name="cholesterol"
                                             onChangeText={handleChange("cholesterol")}
                                             onBlur={handleBlur("cholesterol")}
@@ -135,7 +135,7 @@ export const MetricsForm = () => {
                                             as={TextInput}
                                             keyboardType="number"
                                             mode="outlined"
-                                            label="Heart Rate (p/m)"
+                                            label="Glucose (mg/dl)"
                                             name="glucose"
                                             onChangeText={handleChange("glucose")}
                                             onBlur={handleBlur("glucose")}
