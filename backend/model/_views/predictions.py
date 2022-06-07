@@ -15,19 +15,17 @@ class Prediction(APIView):
     def post(self, request):
         """ Expected body will look like:
         body : {
-            'age' : 23, ,- int
-            'gender' : 0, <- bin 
-            'ap_hi' : 15.0, <- float
-            'ap_lo' : 8.0, <- float
-            'smoke' : True, <- bool
-            'alco' : False, <- bool
-            'active' : True, <- bool
-            'height' : 189, <- int
-            'weight' : 80.0 , <- float
-            'cholesterol_normal': 1, <- bin
-            'cholesterol_above_normal': 0, <- bin
-            'gluc_normal': 0, <- bin
-            'gluc_above_normal' : 1, <- bin
+            'age', int
+            'gender', 0,1 or 2 (2 will count as 0)
+            'height', float e.g. 1.78m
+            'weight', int e.g. 100kg
+            'systolic_pressure', float(1 decimal) e.g. 15.0
+            'diastolic_pressure', same
+            'smoking', bool
+            'drinking', bool
+            'exercising', bool
+            'cholesterol', int (e.g. 150)
+            'glucose' int (e.g. 150)
         } 
         """
         print(os.getcwd())
@@ -37,12 +35,24 @@ class Prediction(APIView):
             return BadRequestException("Invalid body structure")
         print(body)
         scaler = joblib.load('./model/saved_objects/scaler.h5')
-        ap_hi = body['ap_hi'] * 10
-        ap_lo = body['ap_lo'] * 10
-        smoke = 1 if body['smoke'] else 0
-        alco = 1 if body['alco'] else 0 
-        active = 1 if body['active'] else 0
-        bmi = round(body['weight'] // (body['height']/100)**2, 1)
+        ap_hi = body['systolic_pressure'] * 10
+        ap_lo = body['diastolic_pressure'] * 10
+        smoke = 1 if body['smoking'] else 0
+        alco = 1 if body['drinking'] else 0 
+        active = 1 if body['exercising'] else 0
+        bmi = round(body['weight'] // (body['height'])**2, 1)
+        if body['glucose']:
+            gluc_normal = 1 if body['glucose'] < 100 else 0
+            gluc_above_normal = 1 if body['glucose']>=100 else 0
+        else:
+            gluc_normal = 1
+            gluc_above_normal = 0
+        if body['cholesterol']:
+            cholesterol_normal = 1 if body['cholesterol'] < 240 else 0
+            cholesterol_above_normal = 1 if body['cholesterol'] >= 240 else 0
+        else:
+            cholesterol_normal = 1
+            cholesterol_above_normal = 0
         data = {
             'age':body['age'],
             'gender':body['gender'],
@@ -52,10 +62,10 @@ class Prediction(APIView):
             'alco':alco,
             'active':active,
             'bmi':bmi,
-            'cholesterol_normal': body['cholesterol_normal'],
-            'cholesterol_above_normal': body['cholesterol_above_normal'],
-            'gluc_normal': body['gluc_normal'],
-            'gluc_above_normal': body['gluc_above_normal']
+            'cholesterol_normal': cholesterol_normal,
+            'cholesterol_above_normal': cholesterol_above_normal,
+            'gluc_normal': gluc_normal,
+            'gluc_above_normal': gluc_above_normal
         }
         row = InputRowSerializer(data=data)
         if row.is_valid():
@@ -79,7 +89,8 @@ class Prediction(APIView):
                 pred_class = 1
             else:
                 pred_class = 2
-            return OK({'class':pred_class,
+            return OK({'exact_output':prediction[0][0],
+                       'class':pred_class,
                        'data':data
                       })
         return SerializerErrors(row)
