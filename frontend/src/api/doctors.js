@@ -6,7 +6,7 @@ axios.defaults.baseURL = config.apiUrl;
 
 export const getDoctorsCall = async () => {
     const requestUrl = `users`;
-    const params = { kind: "doctors "}
+    const params = { kind: "doctors" }
     return getRequest({
         requestUrl,
         params,

@@ -22,6 +22,7 @@ export const DoctorCard = ({
             id,
             username,
             doctor_info,
+            isDoctor: true,
         }));
     }
 

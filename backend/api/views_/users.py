@@ -18,7 +18,9 @@ class Users(APIView):
     
     def get(self, request):
         kind = request.GET.get("kind")
+        print("kind:", kind)
         if kind=="doctors":
+            print("getting doctors")
             users = User.objects.filter(is_doctor=True)
         else:
             users = User.objects.all()

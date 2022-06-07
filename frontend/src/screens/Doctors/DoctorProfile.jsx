@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
 export const DoctorProfile = ({ navigation: { navigate } }) => {
     const theme = useTheme();
     const dispatch = useDispatch();
-    const { selectedDoctor: { id, firstName, lastName, username, doctor_info } } = useSelector(selectDoctor);
+    const { selectedDoctor: { id, firstName, lastName, username, doctor_info, isDoctor } } = useSelector(selectDoctor);
     
     const { description, expertise } = doctor_info || {};
 
@@ -43,6 +43,7 @@ export const DoctorProfile = ({ navigation: { navigate } }) => {
             username,
             id,
             doctor_info,
+            isDoctor,
         }));
         navigate("Chat");
     }

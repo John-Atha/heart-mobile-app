@@ -60,7 +60,7 @@ export const Messages = ({ contact, navigate }) => {
     }
 
     const goToProfile = () => {
-        if (contact.is_doctor) {
+        if (contact.isDoctor) {
             dispatch(setDoctor(contact));
             navigate("Doctors"); 
         }

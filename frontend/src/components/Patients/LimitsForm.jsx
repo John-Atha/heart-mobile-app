@@ -1,6 +1,9 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { StyleSheet, View } from 'react-native';
 import { DataTable, HelperText, TextInput } from 'react-native-paper';
+import { useQuery } from 'react-query';
+import { getAllMetrics } from '../../api/metrics';
+import { queriesKeys } from '../../api/queriesKeys';
 
 
 const styles = StyleSheet.create({
@@ -12,6 +15,8 @@ const styles = StyleSheet.create({
     },
 })
 export const LimitsForm = ({
+    isEdit,
+    isCreate,
     limits,
     setLimits,
     errors,
@@ -39,8 +44,9 @@ export const LimitsForm = ({
                 <DataTable.Title numeric>To</DataTable.Title>
             </DataTable.Header>
 
-            {limits.map(({ metric, lower_limit, upper_limit }) => {
-                const { error, helperText } = errors[metric];
+            {!!limits?.length && limits.map(({ metric, lower_limit, upper_limit }) => {
+                const { error, helperText } = errors[metric] || {};
+                console.log({ metric, lower_limit, upper_limit });
                 return (
                     <DataTable.Row>
                         {/* <View> */}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View } from 'react-native'
+import { Text, View } from 'react-native'
 import { Button, Checkbox, Headline } from 'react-native-paper'
 import { useQuery, useQueryClient } from 'react-query'
 import { useDispatch } from 'react-redux'
@@ -156,12 +156,12 @@ export const Limits = ({ patient_id }) => {
     }
 
     const renderTable = () => {
-        if (isError) {
+        if (isError && !isCreate) {
             return (
                 <View>
-                    <Headline>
+                    <Text style={{ fontSize: 17, textAlign: "center", marginTop: "16px", }}>
                         You have not added the recommended limits for this patient
-                    </Headline>
+                    </Text>
                     {!isCreate &&
                         <Button
                             mode='contained'
@@ -181,6 +181,8 @@ export const Limits = ({ patient_id }) => {
                     setLimits={setLimits}
                     onSubmit={submit}
                     errors={errors}
+                    isEdit={isEdit}
+                    isCreate={isCreate}
                 />
             )
         }
