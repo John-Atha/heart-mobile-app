@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from model.models import InputRow
 from model.serializers.predictions import InputRowSerializer
 from .helpers import OK, BadRequestException, Deleted, NotFoundException, SerializerErrors, UnAuthorizedException
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, binarize
 import joblib
 import json
 import pandas as pd
@@ -12,6 +12,29 @@ from keras.models import load_model
 import os
 
 class Prediction(APIView):
+    def predict_risk(self, data):
+        scaler = joblib.load('./model/saved_objects/scaler.h5')
+        columns = joblib.load('./model/saved_objects/x_train_columns.h5')
+        to_be_scaled_feat = ['age', 'ap_hi', 'ap_lo','bmi']
+
+        row_list = list(data.values())
+        new_list = [[]]
+        new_list[0] = row_list
+        print(row_list)
+        row_df = pd.DataFrame(new_list, columns=columns)
+        row_df[to_be_scaled_feat] = scaler.transform(row_df[to_be_scaled_feat])
+
+        model = load_model('./model/saved_objects/cdv_dnn_model.h5')
+        prediction = model.predict(row_df)
+
+        print("Prediction for input is: ", prediction[0][0])
+        if prediction[0][0] < 0.35:
+            return 0, prediction[0][0]
+        elif prediction[0][0] > 0.35 and prediction[0][0] < 0.7:
+            return 1, prediction[0][0]
+        else:
+            return 2, prediction[0][0]
+
     def post(self, request):
         """ Expected body will look like:
         body : {
@@ -34,28 +57,43 @@ class Prediction(APIView):
         except Exception:
             return BadRequestException("Invalid body structure")
         print(body)
-        scaler = joblib.load('./model/saved_objects/scaler.h5')
-        ap_hi = body['systolic_pressure'] * 10
-        ap_lo = body['diastolic_pressure'] * 10
-        smoke = 1 if body['smoking'] else 0
-        alco = 1 if body['drinking'] else 0 
-        active = 1 if body['exercising'] else 0
-        bmi = round(body['weight'] // (body['height'])**2, 1)
-        if body['glucose']:
+        
+        if body == {}:
+            return OK({
+                        "class":0
+                      })
+
+        age = body['age'] if body.get('age') else 53
+        gender = body['gender'] if body.get('gender') else 1
+        height = body['height'] if body.get('height') else 1.65
+        weight = body['weight'] if body.get('weight') else 74
+        ap_hi = body['systolic_pressure'] * 10 if body.get('systolic_pressure') else 129
+        ap_lo = body['diastolic_pressure'] * 10 if body.get('diastolic_pressure') else 98
+        smoke = 1 if body.get('smoking') and body['smoking'] else 0
+        alco = 1 if body.get('drinking') and body['drinking'] else 0 
+        if body.get('exercising'):
+            if body['exercising']:
+                active = 1
+            else:
+                active = 0
+        else:
+            active = 1
+        bmi = round(weight // (height)**2, 1)
+        if body.get('glucose'):
             gluc_normal = 1 if body['glucose'] < 100 else 0
             gluc_above_normal = 1 if body['glucose']>=100 else 0
         else:
             gluc_normal = 1
             gluc_above_normal = 0
-        if body['cholesterol']:
+        if body.get('cholesterol'):
             cholesterol_normal = 1 if body['cholesterol'] < 240 else 0
             cholesterol_above_normal = 1 if body['cholesterol'] >= 240 else 0
         else:
             cholesterol_normal = 1
             cholesterol_above_normal = 0
         data = {
-            'age':body['age'],
-            'gender':body['gender'],
+            'age':age,
+            'gender':gender,
             'ap_hi':ap_hi,
             'ap_lo':ap_lo,
             'smoke':smoke,
@@ -69,28 +107,9 @@ class Prediction(APIView):
         }
         row = InputRowSerializer(data=data)
         if row.is_valid():
-            columns = joblib.load('./model/saved_objects/x_train_columns.h5')
-            to_be_scaled_feat = ['age', 'ap_hi', 'ap_lo','bmi']
-
-            row_list = list(data.values())
-            new_list = [[]]
-            new_list[0] = row_list
-            print(row_list)
-            row_df = pd.DataFrame(new_list, columns=columns)
-            row_df[to_be_scaled_feat] = scaler.transform(row_df[to_be_scaled_feat])
-
-            model = load_model('./model/saved_objects/cdv_dnn_model.h5')
-            prediction = model.predict(row_df)
-
-            print("Prediction for input is: ", prediction[0][0])
-            if prediction[0][0] < 0.35:
-                pred_class = 0
-            elif prediction[0][0] > 0.35 and prediction[0][0] < 0.7:
-                pred_class = 1
-            else:
-                pred_class = 2
-            return OK({'exact_output':prediction[0][0],
-                       'class':pred_class,
-                       'data':data
+            pred_class, exact = self.predict_risk(data)
+            return OK({ 'exact_output':exact,
+                        'class':pred_class,
+                        'data':data
                       })
         return SerializerErrors(row)
